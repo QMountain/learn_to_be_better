@@ -16,5 +16,6 @@ public class AddDigits {
         AddDigits addDigits = new AddDigits();
         System.out.println(2 == addDigits.addDigits(38));
         System.out.println(0 == addDigits.addDigits(0));
+        System.out.println(-1%9);
     }
 }
