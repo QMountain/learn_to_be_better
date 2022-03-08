@@ -9,42 +9,42 @@ package algorithm.leetcode.hard;
 public class IsMatch {
 
     public boolean isMatch(String s, String p) {
-        if (p.contains(".*")) {
-            return true;
-        }
         if (!p.contains("*")) {
             if (s.length() > p.length()) {
                 return false;
             }
         }
-        int pLength = p.length();
-        int sLength = s.length();
-        int sPointer = 0;
-        int pPointer = 0;
-        boolean canContinue = true;
-        while (canContinue) {
-            if (p.charAt(pPointer) != s.charAt(sPointer)) {
-                if (p.charAt(pPointer) == '.') {
-                    pPointer++;
-                    sPointer++;
-                } else if (p.charAt(pPointer) == '*') {
-                    if (p.charAt(pPointer-1) == s.charAt(sPointer)) {
-                        sPointer++;
-                    } else {
-                        pPointer++;
+        int m = s.length();
+        int n = p.length();
+
+        boolean[][] f = new boolean[m+1][n+1];
+        f[0][0] = true;
+        for (int i = 0; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p.charAt(j-1) == '*') {
+                    f[i][j] = f[i][j-2];
+                    if (matches(s,p,i,j-1)) {
+                        f[i][j] = f[i][j] || f[i-1][j];
                     }
-                }else {
-                    pPointer++;
+                } else {
+                    if (matches(s,p,i,j)) {
+                        f[i][j] = f[i-1][j-1];
+                    }
                 }
-            } else {
-                pPointer++;
-                sPointer++;
-            }
-            if (sPointer >= sLength || pPointer >= pLength) {
-                canContinue = false;
             }
         }
-        return sPointer == sLength;
+
+        return f[m][n];
+    }
+
+    public boolean matches(String s, String p, int i, int j) {
+        if (i == 0) {
+            return false;
+        }
+        if (p.charAt(j-1) == '.') {
+            return true;
+        }
+        return s.charAt(i-1) == p.charAt(j-1);
     }
 
     public static void main(String[] args) {
@@ -53,6 +53,6 @@ public class IsMatch {
         System.out.println(isMatch.isMatch("aa", "a*"));
         System.out.println(isMatch.isMatch("ab", ".*"));
         System.out.println(isMatch.isMatch("aab", "c*a*b"));
-        System.out.println(isMatch.isMatch("ab", ".*c"));
+        System.out.println(!isMatch.isMatch("ab", ".*c"));
     }
 }
