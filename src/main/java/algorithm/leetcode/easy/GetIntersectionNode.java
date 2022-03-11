@@ -1,5 +1,7 @@
 package algorithm.leetcode.easy;
 
+import algorithm.ListNode;
+
 import java.util.HashSet;
 import java.util.Set;
 
