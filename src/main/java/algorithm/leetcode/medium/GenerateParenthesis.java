@@ -40,7 +40,7 @@ public class GenerateParenthesis {
             s.append(")");
             resList.addAll(appendNext(s,leftLeft-i,leftRight-1));
 
-            s = new StringBuilder(s.substring(0,s.toString().length()-i-1));
+            s = new StringBuilder(s.substring(0,s.toString().length()-i-2));
         }
         return resList;
     }
