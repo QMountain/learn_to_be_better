@@ -22,6 +22,9 @@ public class GenerateParenthesis {
 
     public List<String> appendNext(StringBuilder s, int leftLeft, int leftRight) {
         List<String> resList = new ArrayList<>();
+        if (leftLeft > leftRight) {
+            return resList;
+        }
         if (leftLeft == leftRight && leftRight == 1) {
             resList.add(s.append("()").toString());
             return resList;
@@ -33,21 +36,22 @@ public class GenerateParenthesis {
             resList.add(s.toString());
             return resList;
         }
-        for (int i = leftLeft; i > 0; i--) {
-            for (int j = 0; j < leftLeft; j++) {
-                s.append("(");
-            }
-            s.append(")");
-            resList.addAll(appendNext(s,leftLeft-i,leftRight-1));
+        StringBuilder s1 = new StringBuilder(s);
+        s1.append("(");
+        resList.addAll(appendNext(s1,leftLeft-1,leftRight));
 
-            s = new StringBuilder(s.substring(0,s.toString().length()-i-2));
-        }
+        StringBuilder s2 = new StringBuilder(s);
+        s2.append(")");
+        resList.addAll(appendNext(s2,leftLeft,leftRight-1));
+
         return resList;
     }
 
     public static void main(String[] args) {
         GenerateParenthesis generateParenthesis = new GenerateParenthesis();
         System.out.println(generateParenthesis.generateParenthesis(3));
+        System.out.println(generateParenthesis.generateParenthesis(1));
+        System.out.println(generateParenthesis.generateParenthesis(4));
     }
 
 }
