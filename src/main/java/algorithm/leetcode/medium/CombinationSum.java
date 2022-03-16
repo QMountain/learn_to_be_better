@@ -6,29 +6,79 @@ public class CombinationSum {
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> resList = new ArrayList<>();
-        Set<Integer> set = new TreeSet<>();
-        for (int candidate : candidates) {
-            if (candidate == target) {
-                resList.add(Collections.singletonList(candidate));
-            } else {
-                if (candidate < target) {
-                    set.add(candidate);
+        int length = candidates.length;
+        Arrays.sort(candidates);
+
+        int maxLength = target/candidates[0]+1;
+        int[] indexArr = new int[maxLength];
+        int sum = 0;
+        int index = 0;
+        while (true) {
+            sum += candidates[indexArr[index]];
+            if (sum > target) {
+                if (index == 0) {
+                    break;
                 }
+                sum -= candidates[indexArr[index]];
+                sum -= candidates[indexArr[index-1]];
+
+                int updateIndex = index-1;
+                while (updateIndex > 0) {
+                    if (indexArr[updateIndex] >= length-1) {
+                        updateIndex--;
+                    } else {
+                        break;
+                    }
+                }
+                indexArr[updateIndex]++;
+                index = updateIndex;
+                for (int i = index+1; i < maxLength; i++) {
+                    indexArr[i] = indexArr[index];
+                }
+                continue;
+            } else if (sum == target) {
+                List<Integer> list = new ArrayList<>();
+                for (int j = 0; j <= index; j++) {
+                    list.add(candidates[indexArr[j]]);
+                }
+                resList.add(list);
+                if (index == 0) {
+                    break;
+                }
+                sum -= candidates[indexArr[index]];
+                sum -= candidates[indexArr[index-1]];
+
+                int updateIndex = index-1;
+                while (updateIndex > 0) {
+                    if (indexArr[updateIndex] >= length-1) {
+                        updateIndex--;
+                    } else {
+                        break;
+                    }
+                }
+                indexArr[updateIndex]++;
+                index = updateIndex;
+                for (int i = index+1; i < maxLength; i++) {
+                    indexArr[i] = indexArr[index];
+                }
+                continue;
             }
+            index++;
+            if (index > maxLength-1) {
+                break;
+            }
+            //updateIndex--;
         }
-        List<Integer> candidateList = new ArrayList<>(set);
-        Integer minCandidate = candidateList.get(0);
-        int maxCandidate = target - minCandidate;
-        for (int i = maxCandidate+1; i <= target; i++) {
-            set.remove(i);
-        }
-        for (int i = minCandidate; i <= maxCandidate; i++) {
-            resList.addAll(combine(set,i));
-        }
+
         return resList;
     }
 
-    public List<List<Integer>> combine(Set<Integer> set, int target) {
-        return null;
+    public static void main(String[] args) {
+        CombinationSum combinationSum = new CombinationSum();
+        /*System.out.println(combinationSum.combinationSum(new int[]{2, 3, 6, 7}, 7));
+        System.out.println(combinationSum.combinationSum(new int[]{2,3,5}, 8));
+        System.out.println(combinationSum.combinationSum(new int[]{2}, 1));
+        System.out.println(combinationSum.combinationSum(new int[]{1}, 2));*/
+        System.out.println(combinationSum.combinationSum(new int[]{7,3,2}, 18));
     }
 }
