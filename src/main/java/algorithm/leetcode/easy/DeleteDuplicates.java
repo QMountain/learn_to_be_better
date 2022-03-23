@@ -9,11 +9,11 @@ public class DeleteDuplicates {
             return head;
         }
         ListNode current = head;
-        while (current != null && current.next != null) {
+        while (current.next != null) {
             if (current.val != current.next.val) {
                 current = current.next;
             } else {
-                current = current.next.next;
+                current.next = current.next.next;
             }
         }
         return head;
@@ -21,6 +21,8 @@ public class DeleteDuplicates {
 
     public static void main(String[] args) {
         DeleteDuplicates deleteDuplicates = new DeleteDuplicates();
+        System.out.println(deleteDuplicates.deleteDuplicates(new ListNode(1,
+                new ListNode(1, new ListNode(2)))));
         System.out.println(deleteDuplicates.deleteDuplicates(new ListNode(1,
                 new ListNode(1, new ListNode(2,
                         new ListNode(3, new ListNode(3)))))));
