@@ -11,39 +11,41 @@ public class LowestCommonAncestor {
         addToMap(root,p,q,nodeParentMap);
         List<TreeNode> pPath = new ArrayList<>();
         List<TreeNode> qPath = new ArrayList<>();
-        pPath.add(p);
-        qPath.add(q);
         TreeNode parentP = p;
         TreeNode parentQ = q;
-        while (parentP != parentQ && p != parentQ && q != parentP) {
+        while (parentP != null) {
+            pPath.add(0,parentP);
             parentP = nodeParentMap.get(parentP);
+        }
+        while (parentQ != null) {
+            qPath.add(0,parentQ);
             parentQ = nodeParentMap.get(parentQ);
         }
-        if (p == parentQ) {
-            return parentQ;
+        int sizeP = pPath.size();
+        int sizeQ = qPath.size();
+        for (int i = sizeP-1; i >= 0; i--) {
+            for (int j = sizeQ-1; j >= 0; j--) {
+                if (pPath.get(i) == qPath.get(j)) {
+                    return pPath.get(i);
+                }
+            }
         }
-        return parentP;
+        return null;
     }
 
     public void addToMap(TreeNode root, TreeNode p, TreeNode q, Map<TreeNode,TreeNode> nodeParentMap) {
         if (root == null || (root.left == null && root.right == null)) {
             return;
         }
-        boolean findP = false;
-        boolean findQ = false;
-        while (true) {
+        if (nodeParentMap.containsKey(p) && nodeParentMap.containsKey(q)) {
+            return;
+        }
+        if (root.left != null) {
             nodeParentMap.put(root.left,root);
-            nodeParentMap.put(root.right,root);
-            if (nodeParentMap.containsKey(p)) {
-                findP = true;
-            }
-            if (nodeParentMap.containsKey(q)) {
-                findQ = true;
-            }
-            if (findP && findQ) {
-                break;
-            }
             addToMap(root.left,p,q,nodeParentMap);
+        }
+        if (root.right != null) {
+            nodeParentMap.put(root.right,root);
             addToMap(root.right,p,q,nodeParentMap);
         }
     }

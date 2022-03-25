@@ -1,66 +1,53 @@
 package algorithm.leetcode.medium;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class LRUCache {
 
-    public List<String> list;
+    public List<Integer> keyList;
+    public Map<Integer,Integer> kvMap;
     public int capacity;
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        list = new LinkedList<>();
+        keyList = new ArrayList<>(capacity);
+        kvMap = new HashMap<>(capacity);
     }
 
     public int get(int key) {
-        int size = list.size();
-        int index = -1;
-        int retValue = -1;
-        for (int i = 0; i < size; i++) {
-            if (list.get(i).startsWith(key+",")) {
-                index = i;
-                retValue = Integer.parseInt(list.get(i).replaceFirst(key + ",", ""));
-            }
+        if (kvMap.containsKey(key)) {
+            keyList.remove(Integer.valueOf(key));
+            keyList.add(0,key);
+            return kvMap.get(key);
         }
-        if (index != -1) {
-            list.remove(index);
-            list.add(0,key+","+retValue);
-        }
-
-        return retValue;
+        return -1;
     }
 
     public void put(int key, int value) {
-        int size = list.size();
-        int index = -1;
-        String nValue = key+","+value;
-        for (int i = 0; i < size; i++) {
-            if (list.get(i).startsWith(key+",")) {
-                index = i;
-            }
+        if (kvMap.containsKey(key)) {
+            keyList.remove(Integer.valueOf(key));
+            keyList.add(0,key);
+            kvMap.put(key,value);
+            return;
         }
-
-        if (index != -1) {
-            list.remove(index);
-        } else {
-            if (size == capacity) {
-                list.remove(size-1);
-            }
+        int size = keyList.size();
+        if (size == capacity) {
+            Integer lastKey = keyList.get(size - 1);
+            keyList.remove(size-1);
+            kvMap.remove(lastKey);
         }
-        list.add(0,nValue);
+        keyList.add(0,key);
+        kvMap.put(key,value);
     }
 
     public static void main(String[] args) {
         LRUCache lruCache = new LRUCache(2);
-        System.out.println(lruCache.get(2));
-        lruCache.put(2,6);
+        lruCache.put(2,1);
+        lruCache.put(1,1);
+        lruCache.put(2,3);
+        lruCache.put(4,1);
         System.out.println(lruCache.get(1));
-        lruCache.put(1,5);
-        lruCache.put(1,2);
-        System.out.println(lruCache.get(1));
         System.out.println(lruCache.get(2));
-
     }
 
 }
