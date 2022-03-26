@@ -3,27 +3,15 @@ package algorithm.leetcode.medium;
 public class TrailingZeroes {
 
     public int trailingZeroes(int n) {
-        int ten = n / 10;
-        int left = n % 10;
-        if (left >= 5) {
-            left = 1;
-        } else {
-            left = 0;
-        }
-        int i = 1;
-        int pow = 0;
-        while (i < n) {
-            i *= 5;
-            pow++;
-            if (i >= n) {
-                pow--;
+        int res = 0;
+        for (int i = 5; i <= n; i++) {
+            int num = i;
+            while (num % 5 == 0) {
+                res++;
+                num = num/5;
             }
         }
-        int cover = 0;
-        for (int j = 1; j < pow; j++) {
-            cover += j;
-        }
-        return ten*2+left+cover;
+        return res;
     }
 
     public static void main(String[] args) {
