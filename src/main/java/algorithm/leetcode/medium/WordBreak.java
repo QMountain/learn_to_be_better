@@ -8,31 +8,33 @@ public class WordBreak {
         if (Objects.equals(s, "")) {
             return true;
         }
-        Map<Integer,Set<String>> lengthMap = new TreeMap<>();
-        for (String word : wordDict) {
-            int length = word.length();
-            Set<String> set = lengthMap.getOrDefault(length, new HashSet<>());
-            set.add(word);
-            lengthMap.put(length,set);
+        int length = s.length();
+        Set<String> set = new HashSet<>(wordDict);
+        if (length == 1) {
+            return set.contains(s);
         }
-        return fromTree(s, lengthMap);
-    }
-
-    public boolean fromTree(String s, Map<Integer,Set<String>> lengthMap) {
-        ArrayList<Map.Entry<Integer, Set<String>>> entries = new ArrayList<>(lengthMap.entrySet());
-        int size = entries.size();
-        for (int i = size-1; i >= 0; i--) {
-            Map.Entry<Integer, Set<String>> entry = entries.get(i);
-            Integer length = entry.getKey();
-            if (length <= s.length()) {
-                Set<String> value = entry.getValue();
-                for (String word : value) {
-                    if (s.startsWith(word)) {
-                        boolean b = fromTree(s.replaceFirst(word, ""), lengthMap);
-                        if (b) {
-                            return true;
-                        }
-                    }
+        Set<Character> neededChar = new HashSet<>(length);
+        for (int i = 0; i < length; i++) {
+            neededChar.add(s.charAt(i));
+        }
+        Set<Character> hasChar = new HashSet<>(length*2);
+        for (String word : set) {
+            for (int i = 0; i < word.length(); i++) {
+                hasChar.add(word.charAt(i));
+            }
+        }
+        if (!hasChar.containsAll(neededChar)) {
+            return false;
+        }
+        for (int i = length-1; i >= 0; i--) {
+            String substring = s.substring(0, i+1);
+            if (set.contains(substring)) {
+                String sub2 = s.substring(i + 1);
+                if (set.contains(sub2)) {
+                    return true;
+                }
+                if (wordBreak(sub2,wordDict)) {
+                    return true;
                 }
             }
         }
@@ -41,7 +43,22 @@ public class WordBreak {
 
     public static void main(String[] args) {
         WordBreak wordBreak = new WordBreak();
-        /*List<String> wordDict = new ArrayList<>();
+
+        List<String> wordDict6 = new ArrayList<>();
+        wordDict6.add("a");
+        wordDict6.add("aa");
+        wordDict6.add("aaa");
+        wordDict6.add("aaaa");
+        wordDict6.add("aaaaa");
+        wordDict6.add("aaaaaa");
+        wordDict6.add("aaaaaaa");
+        wordDict6.add("aaaaaaaa");
+        wordDict6.add("aaaaaaaaa");
+        System.out.println(wordBreak.wordBreak("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab", wordDict6));
+
+        List<String> wordDict = new ArrayList<>();
         wordDict.add("leet");
         wordDict.add("code");
         System.out.println(wordBreak.wordBreak("leetcode", wordDict));
@@ -69,20 +86,8 @@ public class WordBreak {
         List<String> wordDict5 = new ArrayList<>();
         wordDict5.add("cc");
         wordDict5.add("ac");
-        System.out.println(wordBreak.wordBreak("ccaccc", wordDict5));*/
+        System.out.println(wordBreak.wordBreak("ccaccc", wordDict5));
 
-        List<String> wordDict6 = new ArrayList<>();
-        wordDict6.add("a");
-        wordDict6.add("aa");
-        wordDict6.add("aaa");
-        wordDict6.add("aaaa");
-        wordDict6.add("aaaaa");
-        wordDict6.add("aaaaaa");
-        wordDict6.add("aaaaaaa");
-        wordDict6.add("aaaaaaaa");
-        wordDict6.add("aaaaaaaaa");
-        System.out.println(wordBreak.wordBreak("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab", wordDict6));
+
     }
 }
