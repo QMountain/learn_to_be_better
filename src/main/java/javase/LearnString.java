@@ -7,6 +7,7 @@ package javase;
  * Date   2021-11-21  20:33
  */
 public class LearnString {
+
     public static void main(String[] args) {
         String str1 = "tomcat";
         String str2 = "tom";
