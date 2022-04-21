@@ -4,9 +4,15 @@ public class MinDistance {
 
     public int minDistance(String word1, String word2) {
         int l1 = word1.length();
+        int[] matchArr1 = new int[l1];
+        int l2 = word2.length();
+        int[] matchArr2 = new int[l2];
+
         int maxMatch = 0;
         for (int i = 0; i < l1; i++) {
             int match = 0;
+            matchArr1 = new int[l1];
+            matchArr2 = new int[l2];
             int fromIndex = 0;
             for (int j = i; j < l1; j++) {
                 char c1 = word1.charAt(j);
@@ -22,7 +28,7 @@ public class MinDistance {
                 }
             }
         }
-        int l2 = word2.length();
+
         if (l1 >= l2) {
             return l1-maxMatch;
         }
