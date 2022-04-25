@@ -9,6 +9,11 @@ package javase;
 public class LearnString {
 
     public static void main(String[] args) {
+        String s1 = "tomcat";
+        String s2 = "tomcat";
+        String s3 = new String("tomcat");
+        System.out.println(s1 == s2);
+        System.out.println(s1 == s3);
         String str1 = "tomcat";
         String str2 = "tom";
         String str3 = "cat";
