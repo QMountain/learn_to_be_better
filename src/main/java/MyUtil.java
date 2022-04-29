@@ -1,7 +1,7 @@
 public class MyUtil {
 
     public static void main(String[] args) {
-        String s = "[[1,2],[1,2],[1,1],[1,2],[2,2]]";
+        String s = "[[1,2,3],[4,5,6],[7,8,9]]";
         s = s.trim();
         char[] chars = s.toCharArray();
         for (int i = 0; i < chars.length; i++) {

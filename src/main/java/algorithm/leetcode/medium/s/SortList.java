@@ -1,5 +1,7 @@
 package algorithm.leetcode.medium.s;
 
+import algorithm.ListNode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
