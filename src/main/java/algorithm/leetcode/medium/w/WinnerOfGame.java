@@ -1,4 +1,4 @@
-package algorithm.leetcode.medium;
+package algorithm.leetcode.medium.w;
 
 public class WinnerOfGame {
 

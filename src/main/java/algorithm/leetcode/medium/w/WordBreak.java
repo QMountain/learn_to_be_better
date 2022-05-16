@@ -1,4 +1,4 @@
-package algorithm.leetcode.medium;
+package algorithm.leetcode.medium.w;
 
 import java.util.*;
 
@@ -17,6 +17,18 @@ public class WordBreak {
             }
         }
         return dp[s.length()];
+    }
+
+    public boolean wordBreak2(String s, List<String> wordDict) {
+        Set<String> wordDictSet = new HashSet<>(wordDict);
+        for (String word : wordDictSet) {
+            if (s.startsWith(word)) {
+                if (wordBreak(s.replaceFirst(word,""),wordDict)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {

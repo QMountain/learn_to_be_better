@@ -1,4 +1,4 @@
-package algorithm.leetcode.hard;
+package algorithm.leetcode.hard.m;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,4 +1,4 @@
-package algorithm.leetcode.hard;
+package algorithm.leetcode.hard.m;
 
 import java.util.HashSet;
 import java.util.Set;
