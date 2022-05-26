@@ -1,7 +1,5 @@
 package algorithm.leetcode.medium.m;
 
-import java.util.Arrays;
-
 public class MaxProfit {
 
     public int maxProfit(int[] prices) {
@@ -17,40 +15,45 @@ public class MaxProfit {
 
     // 有冷冻期的
     public int maxProfitWithFreezing(int[] prices) {
-        int length = prices.length;
-        int[] lastSoldIndex = new int[length];
-        Arrays.fill(lastSoldIndex,-4);
-        int[] dp = new int[length];
-        for (int i = 1; i < length; i++) {
-            if (prices[i] > prices[i-1]) {
-                if (lastSoldIndex[i-1] == i-1 || lastSoldIndex[i-1] < i-3) {
-                    lastSoldIndex[i] = i;
-                    dp[i] = dp[i-1] + (prices[i]-prices[i-1]);
-                } else {
-                    int m1 = dp[lastSoldIndex[i-1]];
-                    int m2 = dp[i-3] + (prices[i]-prices[i-1]);
-                    if (m1 >= m2) {
-                        dp[i] = m1;
-                        lastSoldIndex[i] = lastSoldIndex[i-1];
-                    } else {
-                        dp[i] = m2;
-                        lastSoldIndex[i] = i;
-                    }
-                }
-
-            } else {
-                dp[i] = dp[i-1];
-                lastSoldIndex[i] = lastSoldIndex[i-1];
-            }
+        if (prices.length == 0) {
+            return 0;
         }
-        return dp[length-1];
+
+        int n = prices.length;
+        // f[i][0]: 手上持有股票的最大收益
+        // f[i][1]: 手上不持有股票，并且处于冷冻期中的累计最大收益
+        // f[i][2]: 手上不持有股票，并且不在冷冻期中的累计最大收益
+        int[][] f = new int[n][3];
+        f[0][0] = -prices[0];
+        for (int i = 1; i < n; ++i) {
+            f[i][0] = Math.max(f[i - 1][0], f[i - 1][2] - prices[i]);
+            f[i][1] = f[i - 1][0] + prices[i];
+            f[i][2] = Math.max(f[i - 1][1], f[i - 1][2]);
+        }
+        return Math.max(f[n - 1][1], f[n - 1][2]);
     }
 
     public static void main(String[] args) {
         MaxProfit maxProfit = new MaxProfit();
-        System.out.println(maxProfit.maxProfitWithFreezing(new int[]{6, 1, 3,2,4,7}));
-        System.out.println(maxProfit.maxProfitWithFreezing(new int[]{2, 1, 4}));
-        System.out.println(maxProfit.maxProfitWithFreezing(new int[]{1, 2, 3, 0, 2}));
+        System.out.println(maxProfit.maxProfitWithFreezing(new int[]{70, 4, 83, 56, 94, 72, 78, 43}));
+        System.out.println(10 == maxProfit.maxProfitWithFreezing(new int[]{1, 2, 7, 4, 11}));
+        System.out.println(10 == maxProfit.maxProfitWithFreezing(new int[]{8,6,4,3,3,2,3,5,8,3,8,2,6}));
+        System.out.println(10 == maxProfit.maxProfitWithFreezing(new int[]{5, 2, 3, 0, 3, 5, 6, 8, 1, 5}));
+
+        System.out.println(6 == maxProfit.maxProfitWithFreezing(new int[]{1, 4, 2, 7}));
+        System.out.println(6 == maxProfit.maxProfitWithFreezing(new int[]{3, 3, 5, 0, 0, 3, 1, 4}));
+        System.out.println(6 == maxProfit.maxProfitWithFreezing(new int[]{6, 1, 3, 2, 4, 7}));
+        System.out.println(10 == maxProfit.maxProfitWithFreezing(new int[]{2, 4, 1, 7, 11}));
+        System.out.println(3 == maxProfit.maxProfitWithFreezing(new int[]{4, 7, 1, 2}));
+        System.out.println(0 == maxProfit.maxProfitWithFreezing(new int[]{4, 2, 1}));
+        System.out.println(6 == maxProfit.maxProfitWithFreezing(new int[]{2, 1, 4, 7}));
+        System.out.println(6 == maxProfit.maxProfitWithFreezing(new int[]{1, 7, 2, 4}));
+        System.out.println(3 == maxProfit.maxProfitWithFreezing(new int[]{2, 1, 2,1,0,1,2}));
+
+        System.out.println(3 == maxProfit.maxProfitWithFreezing(new int[]{2, 1, 4}));
+        System.out.println(3 == maxProfit.maxProfitWithFreezing(new int[]{1, 2, 3, 0, 2}));
+
+
         System.out.println(7 == maxProfit.maxProfit(new int[]{7,1,5,3,6,4}));
         System.out.println(4 == maxProfit.maxProfit(new int[]{1,2,3,4,5}));
         System.out.println(0 == maxProfit.maxProfit(new int[]{7,6,4,3,1}));

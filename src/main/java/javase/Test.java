@@ -67,8 +67,22 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        Test test = new Test();
+        Thread thread1 = new Thread(() -> {
+            MyQueue.fun1();
+        });
+
+        Thread thread2 = new Thread(() -> {
+            MyQueue myQueue = new MyQueue();
+            Object o = new Object();
+            synchronized (o) {
+                myQueue.fun2();
+            }
+
+        });
+        thread1.start();
+        thread2.start();
+        /*Test test = new Test();
         System.out.println(test.getUniqueNums(new int[]{3, 2, 5, 2, 5, 5}));
-        System.out.println(test.sortRepeatedNums(new int[]{3, 2, 5, 2, 5, 5}));
+        System.out.println(test.sortRepeatedNums(new int[]{3, 2, 5, 2, 5, 5}));*/
     }
 }
