@@ -2,7 +2,7 @@ package algorithm.leetcode.medium.c;
 
 public class CanJump {
 
-    public boolean canJump(int[] nums) {
+    public boolean canJump2(int[] nums) {
         int length = nums.length;
         int canJumpMaxIndex = nums[0];
         int jumpFrom = 0;
@@ -18,6 +18,23 @@ public class CanJump {
                 return false;
             }
         }
+    }
+
+    public boolean canJump(int[] nums) {
+        int length = nums.length;
+        boolean[] canArrive = new boolean[length];
+        canArrive[0] = true;
+        for (int i = 0; i < length; i++) {
+            if (canArrive[i]) {
+                for (int j = 1; j <= nums[i] && i+j < length; j++) {
+                    canArrive[i+j] = true;
+                    if (canArrive[length-1]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return canArrive[length-1];
     }
 
     public static void main(String[] args) {
