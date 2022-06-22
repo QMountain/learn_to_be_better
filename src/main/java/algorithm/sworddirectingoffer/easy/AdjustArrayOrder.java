@@ -1,4 +1,4 @@
-package algorithm.swordtowardoffer.easy;
+package algorithm.sworddirectingoffer.easy;
 
 import java.util.Arrays;
 
