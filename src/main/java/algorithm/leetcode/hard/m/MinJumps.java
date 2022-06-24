@@ -1,6 +1,8 @@
 package algorithm.leetcode.hard.m;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -10,6 +12,88 @@ import java.util.Set;
  * Date   2022-01-24  22:07
  */
 public class MinJumps {
+
+    /**
+     * 跳跃游戏 IV  hard
+     * @param arr
+     * @return
+     */
+    public int minJumpsHardUseDP(int[] arr) {
+        int length = arr.length;
+        if (length == 1) {
+            return 0;
+        }
+        if (arr[0] == arr[length-1]) {
+            return 1;
+        }
+        Map<Integer,Integer> map = new HashMap<>(length);
+        map.put(arr[1],1);
+        map.put(arr[0],0);
+        int[] dp = new int[length];
+        dp[0] = 0;
+        dp[1] = 1;
+        for (int i = 2; i < length; i++) {
+            int num = arr[i];
+            int m1 = length;
+            if (map.containsKey(num)) {
+                m1 = map.get(num)+1;
+            }
+            int m2 = dp[i-1]+1;
+            int min = Math.min(m1,m2);
+            dp[i] = min;
+            map.put(num,Math.min(map.getOrDefault(num, length),min));
+            if (dp[i] + 1 < dp[i-1]) {
+                int goBackStep = (dp[i-1] - dp[i]) / 2;
+                for (int j = i-1; j > i-1-goBackStep; j--) {
+                    dp[j] = Math.min(dp[j],dp[j+1]+1);
+                    map.put(arr[j],Math.min(map.get(arr[j]),dp[j]));
+                }
+            }
+        }
+        return dp[length-1];
+    }
+
+    /**
+     * 跳跃游戏 IV  hard
+     * @param arr
+     * @return
+     */
+    public int minJumpsHard(int[] arr) {
+        int length = arr.length;
+        if (length == 1) {
+            return 0;
+        }
+        if (arr[0] == arr[length-1]) {
+            return 1;
+        }
+        Map<Integer,Set<Integer>> points = new HashMap<>(length);
+        for (int i = 1; i < length; i++) {
+            int num = arr[i];
+            HashSet<Integer> set = new HashSet<>(
+                    points.getOrDefault(num, new HashSet<>(length)));
+            set.add(i);
+            points.put(num,set);
+        }
+        int jumpTimes = 1;
+        Set<Integer> canArrivePositions = new HashSet<>(
+                points.getOrDefault(arr[0],new HashSet<>()));
+        canArrivePositions.add(1);
+        Set<Integer> passed = new HashSet<>(canArrivePositions);
+        passed.add(0);
+        while (!canArrivePositions.contains(length-1)) {
+            jumpTimes++;
+            Set<Integer> newPositions = new HashSet<>();
+            for (Integer position : canArrivePositions) {
+                newPositions.addAll(points.get(arr[position]));
+                newPositions.add(position-1);
+                newPositions.add(position+1);
+            }
+            newPositions.removeAll(passed);
+            passed.addAll(newPositions);
+            canArrivePositions = newPositions;
+        }
+        return jumpTimes;
+    }
 
     public int minJumps(int[] arr) {
         if (arr.length == 1) {
@@ -67,6 +151,12 @@ public class MinJumps {
 
     public static void main(String[] args) {
         MinJumps minJumps = new MinJumps();
+        System.out.println(3 == minJumps.minJumpsHardUseDP(new int[]{7,7,2,1,7,7,7,3,4,1}));
+        System.out.println(2 == minJumps.minJumpsHardUseDP(new int[]{7,7,7,7,7,7,7,7,7,7,11}));
+        System.out.println(2 == minJumps.minJumpsHardUseDP(new int[]{6,1,9}));
+
+
+
         System.out.println(3 == minJumps.minJumps(new int[]{100,-23,-23,404,100,23,23,23,3,404}));
         System.out.println(1 == minJumps.minJumps(new int[]{7,6,9,6,9,6,9,7}));
         System.out.println(2 == minJumps.minJumps(new int[]{6,1,9}));

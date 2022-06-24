@@ -7,56 +7,51 @@ import java.util.TreeMap;
 public class SmallestDistancePair {
 
     public int smallestDistancePair(int[] nums, int k) {
-        Map<Integer,Integer> numCountMap = new TreeMap<>();
+        TreeMap<Integer,Integer> numCountMap = new TreeMap<>();
         for (int num : nums) {
             numCountMap.put(num,numCountMap.getOrDefault(num,0)+1);
         }
-        ArrayList<Integer> list = new ArrayList<>(numCountMap.keySet());
-        int size = list.size();
-        Map<Integer,Integer> map = new TreeMap<>();
-        for (Integer num : list) {
-            Integer count = numCountMap.get(num);
-            map.put(0, map.getOrDefault(0, 0) + (count - 1) * count / 2);
+        int count0 = 0;
+        for (Map.Entry<Integer, Integer> entry : numCountMap.entrySet()) {
+            Integer value = entry.getValue();
+            count0 += (value-1)*value/2;
         }
-        Integer count0 = map.get(0);
         if (count0 >= k) {
             return 0;
         }
         k -= count0;
-        int count = 0;
-        int lastKey = 0;
-        int lastAddCount = 0;
-        for (int i = 0; i < size-1; i++) {
+        TreeMap<Integer,Integer> map = new TreeMap<>();
+        ArrayList<Map.Entry<Integer, Integer>> entries = new ArrayList<>(
+                numCountMap.entrySet());
+        int size = entries.size();
+        int totalCount = 0;
+        for (int i = 0; i < size - 1; i++) {
+            Map.Entry<Integer, Integer> currentEntry = entries.get(i);
             for (int j = i+1; j < size; j++) {
-                Integer num1 = list.get(i);
-                Integer count1 = numCountMap.get(num1);
-                Integer num2 = list.get(j);
-                Integer count2 = numCountMap.get(num2);
-                int abs = Math.abs(num1 - num2);
-                int cnt = count1*count2;
-                if (count >= k && abs >= lastKey) {
-                    continue;
+                Map.Entry<Integer, Integer> nextEntry = entries.get(j);
+                int abs = Math.abs(currentEntry.getKey() - nextEntry.getKey());
+                if (totalCount >= k && abs >= map.lastKey()) {
+                    break;
                 }
-                count += cnt;
-                lastAddCount = cnt;
-                lastKey = Math.max(lastKey,abs);
-                while (count > k && count - lastAddCount > k)
-                if (count > k) {
-                    while (true) {
-                        ArrayList<Integer> keys = new ArrayList<>(map.keySet());
-                        Integer maxKey = keys.get(keys.size() - 1);
-                        Integer cn = map.get(maxKey);
-                        if (cn > count - k) {
-                            break;
-                        }
-                        map.remove(maxKey);
-                        count -= cn;
+                int count = currentEntry.getValue() * nextEntry.getValue();
+                map.put(abs,map.getOrDefault(abs,0)+count);
+                totalCount += count;
+                while (totalCount > k) {
+                    Map.Entry<Integer, Integer> lastEntry = map.lastEntry();
+                    Integer lastKey = lastEntry.getKey();
+                    Integer lastValue = lastEntry.getValue();
+                    if (totalCount - k >= lastValue) {
+                        map.pollLastEntry();
+                        totalCount -= lastValue;
+                    } else {
+                        map.put(lastKey,lastValue-(totalCount-k));
+                        totalCount = k;
+                        break;
                     }
                 }
             }
         }
-        ArrayList<Integer> keys = new ArrayList<>(map.keySet());
-        return keys.get(keys.size() - 1);
+        return map.lastKey();
     }
 
     public static void main(String[] args) {

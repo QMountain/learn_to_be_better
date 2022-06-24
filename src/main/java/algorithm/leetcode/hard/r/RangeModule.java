@@ -1,132 +1,76 @@
 package algorithm.leetcode.hard.r;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class RangeModule {
 
-    List<int[]> segments;
+    TreeMap<Integer, Integer> intervals;
 
     public RangeModule() {
-        segments = new LinkedList<>();
+        intervals = new TreeMap<>();
     }
 
     public void addRange(int left, int right) {
-        if (segments.size() == 0) {
-            int[] arr = new int[2];
-            arr[0] = left;
-            arr[1] = right;
-            segments.add(0,arr);
-            return;
-        }
-        int min = segments.get(0)[0];
-        int max = segments.get(segments.size()-1)[1];
-        if (left <= min && right >= max) {
-            int[] arr = new int[2];
-            arr[0] = left;
-            arr[1] = right;
-            segments = Collections.singletonList(arr);
-            return;
-        }
-        if (right < min) {
-            int[] arr = new int[2];
-            arr[0] = left;
-            arr[1] = right;
-            segments.add(0,arr);
-            return;
-        }
-        if (right == min) {
-            int[] arr = segments.get(0);
-            arr[0] = left;
-            return;
-        }
-        if (left > max) {
-            int[] arr = new int[2];
-            arr[0] = left;
-            arr[1] = right;
-            segments.add(arr);
-            return;
-        }
-        if (left == max) {
-            int[] arr = segments.get(segments.size()-1);
-            arr[1] = right;
-            return;
-        }
-        int size = segments.size();
-        for (int[] arr : segments) {
-            if (right <= arr[0] || left >= arr[1]) {
-                continue;
-            }
-            if (right <= arr[1]) {
-                if (left < arr[0]) {
-                    addRange(left, arr[0]);
-                    return;
-                }
+        Map.Entry<Integer, Integer> entry = intervals.higherEntry(left);
+        if (entry != intervals.firstEntry()) {
+            Map.Entry<Integer, Integer> start = entry != null ? intervals.lowerEntry(entry.getKey()) : intervals.lastEntry();
+            if (start != null && start.getValue() >= right) {
                 return;
             }
-            if (left < arr[0]) {
-                addRange(left,arr[0]);
-                addRange(arr[1],right);
-                return;
-            }
-            addRange(arr[1], right);
-        }
-        int putIndex = -1;
-        for (int i = 0; i < size-1; i++) {
-            int[] arr = segments.get(i);
-            int[] next = segments.get(i + 1);
-            if (left >= arr[1] && right <= next[0]) {
-                putIndex = i+1;
-                break;
+            if (start != null && start.getValue() >= left) {
+                left = start.getKey();
+                intervals.remove(start.getKey());
             }
         }
-        int[] arr = new int[2];
-        arr[0] = left;
-        arr[1] = right;
-        segments.add(putIndex,arr);
+        while (entry != null && entry.getKey() <= right) {
+            right = Math.max(right, entry.getValue());
+            intervals.remove(entry.getKey());
+            entry = intervals.higherEntry(entry.getKey());
+        }
+        intervals.put(left, right);
     }
 
     public boolean queryRange(int left, int right) {
-        if (segments.size() == 0) {
+        Map.Entry<Integer, Integer> entry = intervals.higherEntry(left);
+        if (entry == intervals.firstEntry()) {
             return false;
         }
-        for (int[] segment : segments) {
-            if (segment[0] >= right) {
-                return false;
-            }
-            if (segment[1] <= left) {
-                continue;
-            }
-            if (left >= segment[0]) {
-                if (right <= segment[1]) {
-                    return true;
-                }
-                return queryRange(segment[1],right);
-            }
-        }
-        return false;
+        entry = entry != null ? intervals.lowerEntry(entry.getKey()) : intervals.lastEntry();
+        return entry != null && right <= entry.getValue();
     }
 
     public void removeRange(int left, int right) {
-        if (segments.size() == 0) {
-            return;
-        }
-        for (int[] segment : segments) {
-            if (segment[0] >= right) {
-                return;
-            }
-            if (segment[1] <= left) {
-                continue;
-            }
-            if (left >= segment[0]) {
-                int old = segment[1];
-                segment[1] = left;
-                if (right <= segment[1]) {
-                    addRange(right,old);
-                    return;
+        Map.Entry<Integer, Integer> entry = intervals.higherEntry(left);
+        if (entry != intervals.firstEntry()) {
+            Map.Entry<Integer, Integer> start = entry != null ? intervals.lowerEntry(entry.getKey()) : intervals.lastEntry();
+            if (start != null && start.getValue() >= right) {
+                int ri = start.getValue();
+                if (start.getKey() == left) {
+                    intervals.remove(start.getKey());
+                } else {
+                    intervals.put(start.getKey(), left);
+                }
+                if (right != ri) {
+                    intervals.put(right, ri);
                 }
                 return;
+            } else if (start != null && start.getValue() > left) {
+                if (start.getKey() == left) {
+                    intervals.remove(start.getKey());
+                } else {
+                    intervals.put(start.getKey(), left);
+                }
+            }
+        }
+        while (entry != null && entry.getKey() < right) {
+            if (entry.getValue() <= right) {
+                intervals.remove(entry.getKey());
+                entry = intervals.higherEntry(entry.getKey());
+            } else {
+                intervals.put(right, entry.getValue());
+                intervals.remove(entry.getKey());
+                break;
             }
         }
     }
