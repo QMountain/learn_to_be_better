@@ -1,31 +1,30 @@
-package algorithm.leetcode.hard;
+package algorithm.leetcode.hard.b;
 
 public class BestRotation {
 
     public int bestRotation(int[] nums) {
-        /*int length = nums.length;
-        Map<Integer,Integer> scoreIndexMap = new TreeMap<>();
+        int length = nums.length;
+        int maxScore = 0;
+        int maxK = 0;
         for (int i = 0; i < length; i++) {
-            int[] newNums = new int[length];
-            System.arraycopy(nums,i,newNums,0,length-i);
-            System.arraycopy(nums,0,newNums,length-i,i);
             int score = 0;
-            for (int j = 0; j < length; j++) {
-                if (newNums[j] <= j) {
+            for (int j = 0; j < i; j++) {
+                if (nums[j] <= length-i+j) {
                     score++;
                 }
             }
-            if (scoreIndexMap.containsKey(score)) {
-                scoreIndexMap.put(score,Math.min(scoreIndexMap.get(score),i));
-            } else {
-                scoreIndexMap.put(score,i);
+            for (int j = i; j < length; j++) {
+                if (nums[j] <= j-i) {
+                    score++;
+                }
+            }
+            if (score > maxScore) {
+                maxScore = score;
+                maxK = i;
             }
         }
-        Set<Integer> set = scoreIndexMap.keySet();
-        List<Integer> list = new ArrayList<>(set);
-        Integer maxScore = list.get(list.size()-1);
-        return scoreIndexMap.get(maxScore);*/
-        int n = nums.length;
+        return maxK;
+        /*int n = nums.length;
         int[] diffs = new int[n];
         for (int i = 0; i < n; i++) {
             int low = (i + 1) % n;
@@ -46,7 +45,7 @@ public class BestRotation {
                 maxScore = score;
             }
         }
-        return bestIndex;
+        return bestIndex;*/
 
     }
 

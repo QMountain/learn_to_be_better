@@ -8,21 +8,14 @@ public class SwapPairs {
         if (head == null) {
             return null;
         }
-        ListNode nHead = head.next;
-        ListNode node = head;
-        ListNode next = head.next;
-        while (node != null && next != null) {
-            ListNode nextNode = next.next;
-            node.next = nextNode;
-            next.next = node;
-            node = nextNode;
-            if (node != null) {
-                next = node.next;
-            } else {
-                next = null;
-            }
+        if (head.next == null) {
+            return head;
         }
-        nHead.next = head;
+        ListNode next = head.next;
+        ListNode third = next.next;
+        head.next = swapPairs(third);
+        next.next = head;
+        head = next;
         return head;
     }
 
