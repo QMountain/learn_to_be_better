@@ -4,39 +4,96 @@ public class Intersect {
 
     public Node intersect(Node quadTree1, Node quadTree2) {
         if (quadTree1.isLeaf && quadTree2.isLeaf) {
-            quadTree1.val = quadTree1.val | quadTree2.val;
-            return quadTree1;
+            Node node = new Node();
+            node.val = quadTree1.val | quadTree2.val;
+            node.isLeaf = true;
+            return node;
         }
         if (quadTree1.isLeaf) {
-            quadTree2.topLeft = intersect(quadTree1,quadTree2.topLeft);
-            quadTree2.topRight = intersect(quadTree1,quadTree2.topRight);
-            quadTree2.bottomLeft = intersect(quadTree1,quadTree2.bottomLeft);
-            quadTree2.bottomRight = intersect(quadTree1,quadTree2.bottomRight);
-            if (quadTree2.topLeft.isLeaf &&
-            quadTree2.topRight.isLeaf &&
-            quadTree2.bottomLeft.isLeaf &&
-            quadTree2.bottomRight.isLeaf) {
-
+            Node node = new Node();
+            node.topLeft = intersect(quadTree1,quadTree2.topLeft);
+            node.topRight = intersect(quadTree1,quadTree2.topRight);
+            node.bottomLeft = intersect(quadTree1,quadTree2.bottomLeft);
+            node.bottomRight = intersect(quadTree1,quadTree2.bottomRight);
+            if (node.topLeft.isLeaf &&
+                    node.topRight.isLeaf &&
+                    node.bottomLeft.isLeaf &&
+                    node.bottomRight.isLeaf &&
+                    node.topLeft.val == node.topRight.val &&
+                    node.topRight.val == node.bottomLeft.val &&
+                    node.bottomLeft.val == node.bottomRight.val) {
+                node.isLeaf = true;
+                node.val = node.topLeft.val;
+                node.topLeft = null;
+                node.topRight = null;
+                node.bottomLeft = null;
+                node.bottomRight = null;
+                return node;
             }
             return quadTree2;
         }
         if (quadTree2.isLeaf) {
-            quadTree1.topLeft = intersect(quadTree2,quadTree1.topLeft);
-            quadTree1.topRight = intersect(quadTree2,quadTree1.topRight);
-            quadTree1.bottomLeft = intersect(quadTree2,quadTree1.bottomLeft);
-            quadTree1.bottomRight = intersect(quadTree2,quadTree1.bottomRight);
+            Node node = new Node();
+            node.topLeft = intersect(quadTree2,quadTree1.topLeft);
+            node.topRight = intersect(quadTree2,quadTree1.topRight);
+            node.bottomLeft = intersect(quadTree2,quadTree1.bottomLeft);
+            node.bottomRight = intersect(quadTree2,quadTree1.bottomRight);
+            if (node.topLeft.isLeaf &&
+                    node.topRight.isLeaf &&
+                    node.bottomLeft.isLeaf &&
+                    node.bottomRight.isLeaf &&
+                    node.topLeft.val == node.topRight.val &&
+                    node.topRight.val == node.bottomLeft.val &&
+                    node.bottomLeft.val == node.bottomRight.val) {
+                node.isLeaf = true;
+                node.val = node.topLeft.val;
+                node.topLeft = null;
+                node.topRight = null;
+                node.bottomLeft = null;
+                node.bottomRight = null;
+                return node;
+            }
             return quadTree1;
         }
-        quadTree1.val = quadTree1.val | quadTree2.val;
-        quadTree1.topLeft = intersect(quadTree1.topLeft,quadTree2.topLeft);
-        quadTree1.topRight = intersect(quadTree1.topRight,quadTree2.topRight);
-        quadTree1.bottomLeft = intersect(quadTree1.bottomLeft,quadTree2.bottomLeft);
-        quadTree1.bottomRight = intersect(quadTree1.bottomRight,quadTree2.bottomRight);
-        return quadTree1;
+        Node node = new Node();
+        node.topLeft = intersect(quadTree1.topLeft,quadTree2.topLeft);
+        node.topRight = intersect(quadTree1.topRight,quadTree2.topRight);
+        node.bottomLeft = intersect(quadTree1.bottomLeft,quadTree2.bottomLeft);
+        node.bottomRight = intersect(quadTree1.bottomRight,quadTree2.bottomRight);
+        if (node.topLeft.isLeaf && node.topRight.isLeaf
+                && node.bottomLeft.isLeaf && node.bottomRight.isLeaf &&
+        node.topLeft.val == node.topRight.val &&
+        node.topRight.val == node.bottomLeft.val &&
+        node.bottomLeft.val == node.bottomRight.val) {
+            node.isLeaf = true;
+            node.val = node.topLeft.val;
+            node.topLeft = null;
+            node.topRight = null;
+            node.bottomLeft = null;
+            node.bottomRight = null;
+            return node;
+        }
+        return node;
     }
 
     public static void main(String[] args) {
-
+        Intersect intersect = new Intersect();
+        Node node = intersect.intersect(
+                new Node(false, false,
+                        new Node(true, true, null, null, null, null),
+                        new Node(true, true, null, null, null, null),
+                        new Node(false, true, null, null, null, null),
+                        new Node(false, true, null, null, null, null)),
+                new Node(false, false,
+                        new Node(true, true, null, null, null, null),
+                        new Node(true, false,
+                                new Node(false, true, null, null, null, null),
+                                new Node(false, true, null, null, null, null),
+                                new Node(true, true, null, null, null, null),
+                                new Node(true, true, null, null, null, null)),
+                        new Node(true, true, null, null, null, null),
+                        new Node(false, true, null, null, null, null)));
+        System.out.println(node);
     }
 }
 
