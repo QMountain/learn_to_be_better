@@ -1,4 +1,4 @@
-package algorithm.leetcode.medium;
+package algorithm.leetcode.medium.u;
 
 import java.util.ArrayList;
 import java.util.List;
