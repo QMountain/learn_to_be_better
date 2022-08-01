@@ -2,6 +2,44 @@ package algorithm.leetcode.medium.s;
 
 public class SearchMatrix {
 
+    // 搜索二维矩阵， 题号74，medium
+    public boolean searchMatrix2(int[][] matrix, int target) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        if (target < matrix[0][0] || target > matrix[m-1][n-1]) {
+            return false;
+        }
+        int left = 0;
+        int right = m*n-1;
+        while (left <= right) {
+            if (left == right) {
+                int row = left / n;
+                int col = left % n;
+                return matrix[row][col] == target;
+            }
+            if (left + 1 == right) {
+                int row = left / n;
+                int col = left % n;
+                if (matrix[row][col] == target) {
+                    return true;
+                }
+                return matrix[right / n][right % n] == target;
+            }
+            int mid = (left+right)/2;
+            int row = mid / n;
+            int col = mid % n;
+            if (matrix[row][col] == target) {
+                return true;
+            }
+            if (matrix[row][col] < target) {
+                left = mid;
+            } else {
+                right = mid;
+            }
+        }
+        return false;
+    }
+
     public boolean searchMatrix(int[][] matrix, int target) {
         int rows = matrix.length;
         int cols = matrix[0].length;
