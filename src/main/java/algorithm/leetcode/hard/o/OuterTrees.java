@@ -1,4 +1,4 @@
-package algorithm.leetcode.hard;
+package algorithm.leetcode.hard.o;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
