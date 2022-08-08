@@ -2,7 +2,42 @@ package algorithm.leetcode.medium.p;
 
 import algorithm.TreeNode;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class PathSum {
+
+    // 题号113 medium 路径总和II
+    public List<List<Integer>> pathSum2(TreeNode root, int targetSum) {
+        List<List<Integer>> ansList = new ArrayList<>();
+        if (root == null) {
+            return ansList;
+        }
+        if (root.left == null && root.right == null) {
+            if (root.val == targetSum) {
+                ansList.add(Collections.singletonList(root.val));
+            }
+            return ansList;
+        }
+        if (root.left != null) {
+            List<List<Integer>> lists = pathSum2(root.left, targetSum - root.val);
+            for (List<Integer> list : lists) {
+                ArrayList<Integer> nl = new ArrayList<>(list);
+                nl.add(0,root.val);
+                ansList.add(nl);
+            }
+        }
+        if (root.right != null) {
+            List<List<Integer>> lists = pathSum2(root.right, targetSum - root.val);
+            for (List<Integer> list : lists) {
+                ArrayList<Integer> nl = new ArrayList<>(list);
+                nl.add(0,root.val);
+                ansList.add(nl);
+            }
+        }
+        return ansList;
+    }
 
     public int pathSum(TreeNode root, int targetSum) {
         if (root == null) {
