@@ -7,7 +7,36 @@ import java.util.Set;
 
 public class BuildTree {
 
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
+    // 题号106，medium 从中序与后序遍历序列构造二叉树
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        int pl = postorder.length;
+        int rootVal = postorder[pl-1];
+        TreeNode root = new TreeNode(rootVal);
+        for (int i = 0; i < inorder.length; i++) {
+            if (inorder[i] == rootVal) {
+                if (i > 0) {
+                    int[] nInorder = new int[i];
+                    int[] nPostorder = new int[i];
+                    System.arraycopy(inorder,0,nInorder,0,i);
+                    System.arraycopy(postorder,0,nPostorder,0,i);
+                    root.left = buildTree(nInorder,nPostorder);
+                }
+
+                int l = inorder.length - i - 1;
+                if (l > 0) {
+                    int[] rightInorder = new int[l];
+                    int[] rightPostorder = new int[l];
+                    System.arraycopy(inorder,i+1,rightInorder,0,l);
+                    System.arraycopy(postorder,i,rightPostorder,0,l);
+                    root.right = buildTree(rightInorder,rightPostorder);
+                }
+                break;
+            }
+        }
+        return root;
+    }
+
+    public TreeNode buildTree2(int[] preorder, int[] inorder) {
         int length = preorder.length;
         if (length == 1) {
             return new TreeNode(preorder[0]);
@@ -84,11 +113,15 @@ public class BuildTree {
 
     public static void main(String[] args) {
         BuildTree buildTree = new BuildTree();
-        TreeNode node4 = buildTree.buildTree(new int[]{1,2,3}, new int[]{1,2,3});
+        TreeNode treeNode = buildTree.buildTree(new int[]{9,3,15,20,7}, new int[]{9,15,7,20,3});
+        System.out.println(treeNode);
+
+
+        /*TreeNode node4 = buildTree.buildTree(new int[]{1,2,3}, new int[]{1,2,3});
         TreeNode node3 = buildTree.buildTree(new int[]{1,2,3}, new int[]{3,2,1});
         TreeNode node2 = buildTree.buildTree(new int[]{1,2}, new int[]{1,2});
         TreeNode node1 = buildTree.buildTree(new int[]{1,2}, new int[]{2,1});
         TreeNode node = buildTree.buildTree(new int[]{3,9,20,15,7}, new int[]{9,3,15,20,7});
-        System.out.println(node.toString());
+        System.out.println(node.toString());*/
     }
 }
