@@ -4,6 +4,34 @@ import java.util.Arrays;
 
 public class Rotate {
 
+    // 题号189，medium，轮转数组
+    public void rotate(int[] nums, int k) {
+        int length = nums.length;
+        k %= length;
+        int fixed = 0;
+        int currStartIndex = 0;
+        int nextIndex = k;
+        int moveEle = nums[currStartIndex];
+        while (fixed < length) {
+            int old = nums[nextIndex];
+            nums[nextIndex] = moveEle;
+            moveEle = old;
+            nextIndex = (nextIndex+k)%length;
+            fixed++;
+            if (nextIndex == currStartIndex) {
+                if (fixed == length) {
+                    break;
+                } else {
+                    nums[currStartIndex] = moveEle;
+                    fixed++;
+                    currStartIndex++;
+                    nextIndex = currStartIndex+k;
+                    moveEle = nums[currStartIndex];
+                }
+            }
+        }
+    }
+
     public void rotate(int[][] matrix) {
         int length = matrix.length;
         int i = 0;
@@ -61,6 +89,8 @@ public class Rotate {
 
     public static void main(String[] args) {
         Rotate rotate = new Rotate();
+        rotate.rotate(new int[]{-1,-100,3,99},2);
+        rotate.rotate(new int[]{1,2,3,4,5,6,7},3);
         rotate.rotate(new int[][]{{5,1,9,11},{2,4,8,10},{13,3,6,7},{15,14,12,16}});
         rotate.rotate(new int[][]{{1,2,3},{4,5,6},{7,8,9}});
     }
