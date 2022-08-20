@@ -1,2 +1,8 @@
 # Project exclude paths
 /target/
+/.idea/compiler.xml
+/.idea/encodings.xml
+/.idea/learn_to_be_better.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/workspace.xml
