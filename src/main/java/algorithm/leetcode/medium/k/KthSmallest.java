@@ -1,4 +1,4 @@
-package algorithm.leetcode.medium;
+package algorithm.leetcode.medium.k;
 
 import algorithm.TreeNode;
 
