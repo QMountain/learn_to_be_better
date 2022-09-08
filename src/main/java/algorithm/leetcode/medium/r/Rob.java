@@ -7,7 +7,28 @@ import java.util.Map;
 
 public class Rob {
 
+    // 题号 213，打家劫舍II
     public int rob(int[] nums) {
+        int length = nums.length;
+        if (length == 1) {
+            return nums[0];
+        }
+        int[] dp = new int[length];
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0],nums[1]);
+        for (int i = 2; i < length-1; i++) {
+            dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
+        }
+        int[] dp2 = new int[length];
+        dp2[0] = 0;
+        dp2[1] = nums[1];
+        for (int i = 2; i < length; i++) {
+            dp2[i] = Math.max(dp2[i - 1], dp2[i - 2] + nums[i]);
+        }
+        return Math.max(dp[length-2],dp2[length-1]);
+    }
+
+    public int rob2(int[] nums) {
         int length = nums.length;
         if (length == 1) {
             return nums[0];
@@ -81,6 +102,13 @@ public class Rob {
 
     public static void main(String[] args) {
         Rob rob = new Rob();
+        System.out.println(3 == rob.rob(new int[]{2,1,1,2}));
+        System.out.println(3 == rob.rob(new int[]{1,2,3}));
+        System.out.println(4 == rob.rob(new int[]{1,2,3,1}));
+        System.out.println(3 == rob.rob(new int[]{2,3,2}));
+
+
+
         System.out.println(rob.rob(new int[]{2,7,9,3,1}));
         System.out.println(rob.rob(new int[]{1,2,3,1}));
     }
