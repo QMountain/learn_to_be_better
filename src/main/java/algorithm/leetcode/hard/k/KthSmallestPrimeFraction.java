@@ -1,4 +1,4 @@
-package algorithm.leetcode.hard;
+package algorithm.leetcode.hard.k;
 
 /**
  * @ClassName KthSmallestPrimeFraction
