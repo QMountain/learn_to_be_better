@@ -20,8 +20,8 @@ public class IsAdditiveNumber {
         if (num.charAt(firstNumLength) == '0' && secondNumLength > 1) {
             return false;
         }
-        int firstNum = Integer.parseInt(num.substring(0,firstNumLength));
-        int secondNum = Integer.parseInt(num.substring(firstNumLength,firstNumLength+secondNumLength));
+        String firstNum = num.substring(0,firstNumLength);
+        String secondNum = num.substring(firstNumLength,firstNumLength+secondNumLength);
         StringBuilder sb = new StringBuilder();
         sb.append(firstNum);
         sb.append(secondNum);
@@ -29,7 +29,7 @@ public class IsAdditiveNumber {
             if (!sb.toString().equals(num.substring(0,sb.length()))) {
                 return false;
             }
-            int thirdNum = firstNum+secondNum;
+            String thirdNum = add(firstNum,secondNum);
             sb.append(thirdNum);
             firstNum = secondNum;
             secondNum = thirdNum;
@@ -40,6 +40,33 @@ public class IsAdditiveNumber {
                 return false;
             }
         }
+    }
+
+    public String add(String s1, String s2) {
+        StringBuilder sb = new StringBuilder();
+        int index1 = s1.length() - 1;
+        int index2 = s2.length() - 1;
+        int carry = 0;
+        while (index1 >= 0 || index2 >= 0) {
+            int num1 = 0;
+            if (index1 >= 0) {
+                num1 = Integer.parseInt(s1.charAt(index1)+"");
+            }
+            int num2 = 0;
+            if (index2 >= 0) {
+                num2 = Integer.parseInt(s2.charAt(index2)+"");
+            }
+            int res = num1 + num2 + carry;
+            carry = res / 10;
+            res = res % 10;
+            sb.insert(0,res);
+            index1--;
+            index2--;
+        }
+        if (carry != 0) {
+            sb.insert(0,carry);
+        }
+        return sb.toString();
     }
 
     public static void main(String[] args) {
