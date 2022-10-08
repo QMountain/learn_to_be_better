@@ -10,10 +10,6 @@ public class AdvantageCount {
 
     public int[] advantageCount(int[] nums1, int[] nums2) {
         this.length = nums1.length;
-        int[] n1Copy = new int[length];
-        System.arraycopy(nums1,0,n1Copy,0,length);
-        Arrays.sort(n1Copy);
-        System.out.println(Arrays.toString(n1Copy));
         this.arr1 = sort(nums1);
         this.arr2 = sort(nums2);
         int index1 = 0;
@@ -22,17 +18,16 @@ public class AdvantageCount {
         Arrays.fill(ans,-1);
         int[] used = new int[length];
         while (index1 < length && index2 < length) {
-            System.out.println("arr1: "+arr1[index1][1]+"   arr2: "+arr2[index2][1]);
-            if (arr1[index1][1] > arr2[index2][1]) {
+            int v1 = arr1[index1][1];
+            int v2 = arr2[index2][1];
+            if (v1 > v2) {
                 int putIndex = arr2[index2][0];
-                ans[putIndex] = arr1[index1][1];
+                ans[putIndex] = v1;
                 int useIndex = arr1[index1][0];
                 used[useIndex] = 1;
-                System.out.println("i1i2++");
                 index1++;
                 index2++;
             } else {
-                System.out.println("i1++");
                 index1++;
             }
         }
@@ -58,7 +53,8 @@ public class AdvantageCount {
             if (a[1] != b[1]) {
                 return a[1] - b[1];
             }
-            return a[0] - b[0];
+            // 这个地方巨坑，题解有问题，不按这个排序，case就不过
+            return b[0] - a[0];
         });
         return arr;
     }
