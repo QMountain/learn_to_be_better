@@ -1,4 +1,4 @@
-package algorithm.leetcode.easy;
+package algorithm.leetcode.easy.v;
 
 public class ValidPalindrome {
 
