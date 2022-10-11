@@ -1,6 +1,66 @@
 package algorithm.leetcode.medium.m;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+
 public class MaxProduct {
+
+    // 题号 318 最大单词长度乘积 尝试方法2, 实际提交结果没提升，题解提供的思路是位运算
+    // 把出现的字符表示为01串，然后 & 运算，为0即没有相同字符
+    public int maxProduct2(String[] words) {
+        Arrays.sort(words, Comparator.comparingInt(String::length));
+        int length = words.length;
+        int max = 0;
+        for (int i = length-1; i > 0; i--) {
+            for (int j = i-1; j >= 0; j--) {
+                int length1 = words[i].length();
+                int length2 = words[j].length();
+                if (length1 * length2 > max) {
+                    if (check(words[i],words[j])) {
+                        max = Math.max(max, length1 * length2);
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+        return max;
+    }
+
+    // 题号 318 最大单词长度乘积
+    public int maxProduct(String[] words) {
+        int max = 0;
+        int length = words.length;
+        for (int i = 0; i < length; i++) {
+            for (int j = i+1; j < length; j++) {
+                int length1 = words[i].length();
+                int length2 = words[j].length();
+                if (length1 * length2 > max) {
+                    if (check(words[i],words[j])) {
+                        max = Math.max(max, length1 * length2);
+                    }
+                }
+            }
+        }
+        return max;
+    }
+
+    public boolean check(String s1, String s2) {
+        Set<Character> set = new HashSet<>();
+        int length1 = s1.length();
+        int length2 = s2.length();
+        for (int i = 0; i < length1; i++) {
+            set.add(s1.charAt(i));
+        }
+        for (int i = 0; i < length2; i++) {
+            if (set.contains(s2.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public int maxProduct(int[] nums) {
         int length = nums.length;
@@ -61,6 +121,7 @@ public class MaxProduct {
 
     public static void main(String[] args) {
         MaxProduct maxProduct = new MaxProduct();
+        System.out.println(maxProduct.maxProduct2(new String[]{"eae","ea","aaf","bda","fcf","dc","ac","ce","cefde","dabae"}));
         System.out.println(maxProduct.maxProduct(new int[]{-2,0}));
         System.out.println(maxProduct.maxProduct(new int[]{-3,-1,-1}));
         System.out.println(maxProduct.maxProduct(new int[]{0,2}));
