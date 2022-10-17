@@ -1,6 +1,5 @@
 package algorithm.leetcode.medium.l;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,43 +11,40 @@ public class LargestDivisibleSubset {
         Arrays.sort(nums);
         LinkedList<LinkedList<Integer>> totalList = new LinkedList<>();
         for (int i = 0; i < length; i++) {
-            LinkedList<Integer> list = new LinkedList<>();
-            list.add(i);
-            totalList.add(list);
+            totalList.add(new LinkedList<>());
         }
-        int max = 1;
-        while (true) {
-            LinkedList<LinkedList<Integer>> nt = new LinkedList<>();
-            for (LinkedList<Integer> list : totalList) {
-                Integer last = list.peekLast();
-                for (int i = last+1; i < length && length-i+list.size() > max; i++) {
-                    if (nums[i] % nums[last] == 0) {
-                        LinkedList<Integer> nl = new LinkedList<>(list);
-                        nl.add(i);
-                        nt.add(nl);
-                        max = Math.max(max,nl.size());
+        int maxIndexOfTotal = 0;
+        for (int i = 0; i < length; i++) {
+            int maxIndex = -1;
+            for (int j = 0; j < i; j++) {
+                if (nums[i] % nums[j] == 0) {
+                    maxIndex = j;
+                    break;
+                }
+            }
+            if (maxIndex == -1) {
+                totalList.get(i).add(nums[i]);
+                continue;
+            }
+            for (int j = maxIndex+1; j < i; j++) {
+                if (nums[i] % nums[j] == 0) {
+                    if (totalList.get(j).size() > totalList.get(maxIndex).size()) {
+                        maxIndex = j;
                     }
                 }
             }
-            if (nt.isEmpty()) {
-                break;
-            }
-            totalList = nt;
-        }
-        for (LinkedList<Integer> list : totalList) {
-            if (list.size() == max) {
-                List<Integer> ansList = new ArrayList<>();
-                for (Integer integer : list) {
-                    ansList.add(nums[integer]);
-                }
-                return ansList;
+            totalList.get(i).addAll(totalList.get(maxIndex));
+            totalList.get(i).add(nums[i]);
+            if (totalList.get(i).size() > totalList.get(maxIndexOfTotal).size()) {
+                maxIndexOfTotal = i;
             }
         }
-        return new LinkedList<>();
+        return totalList.get(maxIndexOfTotal);
     }
 
     public static void main(String[] args) {
         LargestDivisibleSubset largestDivisibleSubset = new LargestDivisibleSubset();
+        System.out.println(largestDivisibleSubset.largestDivisibleSubset(new int[]{3,17}));
         System.out.println(largestDivisibleSubset.largestDivisibleSubset(new int[]{1,2,4,8}));
         System.out.println(largestDivisibleSubset.largestDivisibleSubset(new int[]{1,2,3}));
     }
