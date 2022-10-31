@@ -1,42 +1,11 @@
 package algorithm.leetcode.medium.f;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class FindMaximumXOR {
 
     public int findMaximumXOR(int[] nums) {
-        Map<Integer,Set<Integer>> map = new HashMap<>();
-        int maxLength = 0;
-        for (int num : nums) {
-            int l = Integer.toBinaryString(num).length();
-            maxLength = Math.max(maxLength,l);
-            if (map.containsKey(l)) {
-                map.get(l).add(num);
-            } else {
-                Set<Integer> set = new HashSet<>();
-                set.add(num);
-                map.put(l,set);
-            }
-        }
-        Set<Integer> highestSet = map.get(maxLength);
-        int ans = 0;
-        for (Integer highest : highestSet) {
-            String s = Integer.toBinaryString(highest);
-            for (int i = 0; i < s.length(); i++) {
-                if (s.charAt(i) == '0') {
-                    int nl = s.length()-i;
-                    Set<Integer> set = map.get(nl);
-                    break;
-                }
-            }
-        }
-        return ans;
-    }
-
-    public int findMaximumXOR1(int[] nums) {
         int length = nums.length;
         Set<Integer> set = new HashSet<>();
         set.add(nums[0]);
