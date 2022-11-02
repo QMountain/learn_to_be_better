@@ -4,9 +4,36 @@ import algorithm.Node;
 import algorithm.TreeNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LevelOrder {
+
+    // 题号 429 N叉树的层序遍历
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> ansList = new ArrayList<>();
+        if (root == null) {
+            return ansList;
+        }
+        List<Node> list = Collections.singletonList(root);
+        List<Integer> vList = Collections.singletonList(root.val);
+        ansList.add(vList);
+        while (!list.isEmpty()) {
+            List<Node> nl = new ArrayList<>();
+            List<Integer> nvl = new ArrayList<>();
+            for (Node node : list) {
+                for (Node child : node.children) {
+                    nl.add(child);
+                    nvl.add(child.val);
+                }
+            }
+            list = nl;
+            if (!nvl.isEmpty()) {
+                ansList.add(nvl);
+            }
+        }
+        return ansList;
+    }
 
     public List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> resList = new ArrayList<>();
