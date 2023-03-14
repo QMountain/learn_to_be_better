@@ -1,7 +1,5 @@
 package algorithm.leetcode.medium.m;
 
-import java.util.Arrays;
-
 public class MaxValue {
 
     public int maxValue(int[][] grid) {
@@ -25,6 +23,6 @@ public class MaxValue {
 
     public static void main(String[] args) {
         MaxValue maxValue = new MaxValue();
-        System.out.println(maxValue.maxValue(new int[][]{{1,3,1}, {1,5,1}, {4,2,1}}));
+        System.out.println(12 == maxValue.maxValue(new int[][]{{1,3,1}, {1,5,1}, {4,2,1}}));
     }
 }
