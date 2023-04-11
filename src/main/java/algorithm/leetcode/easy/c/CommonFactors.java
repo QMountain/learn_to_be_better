@@ -7,6 +7,16 @@ public class CommonFactors {
 
     public int commonFactors(int a, int b) {
         int min = Math.min(a,b);
+        int max = Math.max(a,b);
+        int remainder = max % min;
+        if (remainder == 0) {
+            return commonFactors2(a,b);
+        }
+        return commonFactors(min, remainder);
+    }
+
+    public int commonFactors2(int a, int b) {
+        int min = Math.min(a,b);
         int sqrt = (int) Math.sqrt(min);
         Set<Integer> set = new HashSet<>();
         set.add(1);
