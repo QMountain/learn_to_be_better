@@ -42,7 +42,6 @@ public class CamelMatch {
                     }
                 }
                 ansList.add(match);
-                continue;
             }
         }
         return ansList;
