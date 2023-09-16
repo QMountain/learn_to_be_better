@@ -7,6 +7,27 @@ import java.util.Map;
 
 public class Rob {
 
+    // 题号198 打家劫舍
+    // 1 <= nums.length <= 100
+    // 0 <= nums[i] <= 400
+    public int rob3(int[] nums) {
+        int length = nums.length;
+        if (length == 1) {
+            return nums[0];
+        }
+        if (length == 2) {
+            return Math.max(nums[0], nums[1]);
+        }
+        int m1 = nums[0];
+        int m2 = Math.max(nums[0], nums[1]);
+        for (int i = 2; i < length; i++) {
+            int m = Math.max(m1 + nums[i], m2);
+            m1 = m2;
+            m2 = m;
+        }
+        return Math.max(m1, m2);
+    }
+
     // 题号 213，打家劫舍II
     public int rob(int[] nums) {
         int length = nums.length;
