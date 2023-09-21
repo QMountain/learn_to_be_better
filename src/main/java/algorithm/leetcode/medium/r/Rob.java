@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Rob {
 
-    // 题号198 打家劫舍
+    // 题号 198 打家劫舍
     // 1 <= nums.length <= 100
     // 0 <= nums[i] <= 400
     public int rob3(int[] nums) {
@@ -29,7 +29,7 @@ public class Rob {
     }
 
     // 题号 213，打家劫舍II
-    public int rob(int[] nums) {
+    public int rob4(int[] nums) {
         int length = nums.length;
         if (length == 1) {
             return nums[0];
@@ -49,6 +49,34 @@ public class Rob {
         return Math.max(dp[length-2],dp2[length-1]);
     }
 
+    // 题号 213，打家劫舍II
+    // 1 <= nums.length <= 100
+    // 0 <= nums[i] <= 1000
+    public int rob(int[] nums) {
+        int length = nums.length;
+        if (length == 1) {
+            return nums[0];
+        }
+        if (length == 2) {
+            return Math.max(nums[0], nums[1]);
+        }
+        int dp1 = nums[0];
+        int dp2 = Math.max(nums[0], nums[1]);
+        for (int i = 2; i < length-1; i++) {
+            int dp = Math.max(dp1 + nums[i], dp2);
+            dp1 = dp2;
+            dp2 = dp;
+        }
+        int dp3 = 0;
+        int dp4 = nums[1];
+        for (int i = 2; i < length; i++) {
+            int dp = Math.max(dp3 + nums[i], dp4);
+            dp3 = dp4;
+            dp4 = dp;
+        }
+        return Math.max(dp2, dp4);
+    }
+
     public int rob2(int[] nums) {
         int length = nums.length;
         if (length == 1) {
@@ -63,7 +91,7 @@ public class Rob {
         return dp[length-1];
     }
 
-    public int rob(TreeNode root) {
+    public int rob2(TreeNode root) {
         if (root == null) {
             return 0;
         }
@@ -73,6 +101,43 @@ public class Rob {
         Map<TreeNode,Integer> robbed = new HashMap<>();
         calAndSetMap(root,robbed);
         return robbed.get(root);
+    }
+
+    // 题号 337 打家劫舍III  时间：32.68% 空间：63.89%
+    // 树的节点数在 [1, 10^4] 范围内
+    // 0 <= Node.val <= 10^4
+    public int rob(TreeNode root) {
+        HashMap<TreeNode, Integer> map = new HashMap<>();
+        return rob(root, map);
+    }
+
+    public int rob(TreeNode root, HashMap<TreeNode, Integer> map) {
+        if (map.containsKey(root)) {
+            return map.get(root);
+        }
+        if (root == null) {
+            return 0;
+        }
+        int res;
+        if (root.left == null && root.right == null) {
+            res = root.val;
+        } else {
+            int m1 = rob(root.left, map) + rob(root.right, map);
+            if (root.left == null) {
+                int m2 = root.val + rob(root.right.left, map) + rob(root.right.right, map);
+                res = Math.max(m1, m2);
+            } else if (root.right == null) {
+                int m2 = root.val + rob(root.left.left, map) + rob(root.left.right, map);
+                res = Math.max(m1, m2);
+            } else {
+                int m2 = root.val + rob(root.left.left, map) + rob(root.left.right, map) +
+                        rob(root.right.left, map) + rob(root.right.right, map);
+                res = Math.max(m1, m2);
+            }
+        }
+
+        map.put(root, res);
+        return res;
     }
 
     public void calAndSetMap(TreeNode root,Map<TreeNode,Integer> robbed) {
@@ -123,6 +188,21 @@ public class Rob {
 
     public static void main(String[] args) {
         Rob rob = new Rob();
+        /* 打家劫舍III case start */
+        System.out.println(9 == rob.rob(new TreeNode(3,
+                new TreeNode(4, new TreeNode(1), new TreeNode(3)),
+                new TreeNode(5, null, new TreeNode(1)))));
+        System.out.println(7 == rob.rob(new TreeNode(3,
+                new TreeNode(2, null, new TreeNode(3)),
+                new TreeNode(3, null, new TreeNode(1)))));
+        /* 打家劫舍III case end */
+
+        /* 打家劫舍II case start */
+        System.out.println(3 == rob.rob(new int[]{2,3,2}));
+        System.out.println(4 == rob.rob(new int[]{1,2,3,1}));
+        System.out.println(3 == rob.rob(new int[]{1,2,3}));
+        /* 打家劫舍II case end */
+
         System.out.println(3 == rob.rob(new int[]{2,1,1,2}));
         System.out.println(3 == rob.rob(new int[]{1,2,3}));
         System.out.println(4 == rob.rob(new int[]{1,2,3,1}));
