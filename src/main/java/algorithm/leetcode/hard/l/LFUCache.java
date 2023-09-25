@@ -41,6 +41,11 @@ public class LFUCache {
         Node node = kvMap.get(key);
         // 节点使用次数+1
         node.count += 1;
+        // 解绑自身
+        Node preDataNode = node.preDataNode;
+        Node nextDataNode = node.nextDataNode;
+        preDataNode.nextDataNode = nextDataNode;
+        nextDataNode.preDataNode = preDataNode;
         // 把自身放入到 count + 1 队列的最前面
         // 当前使用次数列表的头节点，是个排序节点
         Node currDataListHead = node.dataListHead;
@@ -49,14 +54,16 @@ public class LFUCache {
         // 如果这个上一级排序节点是排序头节点，说明就使用次数而言，已是新的最高次数
         if (preDataListHead.count == null || preDataListHead.count > node.count) {
             Node newDataListHead = createNewDataList(node);
-            newDataListHeadAddToOderList(currDataListHead, newDataListHead);
+            newDataListHeadAddToOderList(preDataListHead, newDataListHead);
         } else {
             dataNodeAddToDataList(node, preDataListHead);
         }
+        // 如果currDataListHead已经是个空列表，移除自身
         if (currDataListHead.nextDataNode.key == null) {
+            Node preOrderNode = currDataListHead.preOrderNode;
             Node nextOrderNode = currDataListHead.nextOrderNode;
-            preDataListHead.nextOrderNode = nextOrderNode;
-            nextOrderNode.preOrderNode = preDataListHead;
+            preOrderNode.nextOrderNode = nextOrderNode;
+            nextOrderNode.preOrderNode = preOrderNode;
         }
         return kvMap.get(key).value;
     }
@@ -87,7 +94,7 @@ public class LFUCache {
         if (orderTail.preOrderNode.count == null
                 || orderTail.preOrderNode.count > 1) {
             Node newDataListHead = createNewDataList(node);
-            newDataListHeadAddToOderList(orderTail, newDataListHead);
+            newDataListHeadAddToOderList(orderTail.preOrderNode, newDataListHead);
         } else {
             // 插入到已有的最后一个列表，最后一个列表，一定是使用了一次的
             dataNodeAddToDataList(node, orderTail.preOrderNode);
@@ -137,16 +144,16 @@ public class LFUCache {
         return newDataListHead;
     }
 
-    public void newDataListHeadAddToOderList(Node oldDataListHead, Node newDataListHead) {
-        Node preOrderNode = oldDataListHead.preOrderNode;
-        preOrderNode.nextOrderNode = newDataListHead;
-        newDataListHead.preOrderNode = preOrderNode;
-        newDataListHead.nextOrderNode = oldDataListHead;
-        oldDataListHead.preOrderNode = newDataListHead;
+    public void newDataListHeadAddToOderList(Node preInsertDataListHead, Node newDataListHead) {
+        Node nextOrderNode = preInsertDataListHead.nextOrderNode;
+        preInsertDataListHead.nextOrderNode = newDataListHead;
+        newDataListHead.preOrderNode = preInsertDataListHead;
+        newDataListHead.nextOrderNode = nextOrderNode;
+        nextOrderNode.preOrderNode = newDataListHead;
     }
 
     public static void main(String[] args) {
-        /*LFUCache lfuCache = new LFUCache(1);
+        LFUCache lfuCache = new LFUCache(1);
         System.out.println("null");
         lfuCache.put(2,1);
         System.out.println("null");
@@ -154,9 +161,9 @@ public class LFUCache {
         lfuCache.put(3,2);
         System.out.println("null");
         System.out.println(lfuCache.get(2));
-        System.out.println(lfuCache.get(3));*/
+        System.out.println(lfuCache.get(3));
 
-        LFUCache lfuCache = new LFUCache(2);
+        /*LFUCache lfuCache = new LFUCache(2);
         System.out.println("null");
         lfuCache.put(1,1);
         System.out.println("null");
@@ -171,6 +178,6 @@ public class LFUCache {
         System.out.println("null");
         System.out.println(lfuCache.get(1));
         System.out.println(lfuCache.get(3));
-        System.out.println(lfuCache.get(4));
+        System.out.println(lfuCache.get(4));*/
     }
 }
