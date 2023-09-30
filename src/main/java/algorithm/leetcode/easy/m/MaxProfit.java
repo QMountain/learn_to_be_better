@@ -2,11 +2,24 @@ package algorithm.leetcode.easy.m;
 
 public class MaxProfit {
 
+    // 1 <= prices.length <= 10^5
     public int maxProfit(int[] prices) {
+        int length = prices.length;
+        if (length == 1) {
+            return 0;
+        }
+        int maxProfit = 0;
+        int min = prices[0];
+        for (int i = 1; i < length; i++) {
+            maxProfit = Math.max(maxProfit, prices[i] - min);
+            min = Math.min(min, prices[i]);
+        }
+        return maxProfit;
+    }
 
+    public int maxProfit2(int[] prices) {
         int maxProfit = 0;
         int length = prices.length;
-
         if (length < 2) {
             return 0;
         }
@@ -20,7 +33,6 @@ public class MaxProfit {
             max = prices[1];
             maxProfit = prices[1] - prices[0];
         }
-
         for (int i = 2; i < length; i++) {
             if (prices[i] < min) {
                 min = prices[i];
