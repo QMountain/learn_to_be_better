@@ -2,8 +2,25 @@ package algorithm.leetcode.medium.m;
 
 public class MaxProfit {
 
-    // 题号：122 买卖股票的最佳时机II
+    // 题号：309 买卖股票的最佳时机含冷冻期
+    // 1 <= prices.length <= 5000
     public int maxProfit(int[] prices) {
+        int length = prices.length;
+        int buy = -prices[0];
+        int sell = 0;
+        int freezing = 0;
+        for (int i = 1; i < length; i++) {
+            buy = Math.max(buy, -prices[i]);
+            buy = Math.max(freezing-prices[i], buy);
+            freezing = sell;
+            sell = Math.max(sell, prices[i] + buy);
+        }
+        return Math.max(sell, freezing);
+    }
+
+
+    // 题号：122 买卖股票的最佳时机II
+    public int maxProfit2(int[] prices) {
         int length = prices.length;
         int maxProfit = 0;
         for (int i = 0; i < length-1; i++) {
@@ -36,6 +53,12 @@ public class MaxProfit {
 
     public static void main(String[] args) {
         MaxProfit maxProfit = new MaxProfit();
+        // ********** 题号：309 买卖股票的最佳时机含冷冻期。case start *********
+        System.out.println(maxProfit.maxProfit(new int[]{7,1,5,3,6,4}));
+        System.out.println(0 == maxProfit.maxProfit(new int[]{1}));
+        System.out.println(3 == maxProfit.maxProfit(new int[]{1,2,3,0,2}));
+        // ********** 题号：309 买卖股票的最佳时机含冷冻期。case end *********
+
         System.out.println(maxProfit.maxProfitWithFreezing(new int[]{70, 4, 83, 56, 94, 72, 78, 43}));
         System.out.println(10 == maxProfit.maxProfitWithFreezing(new int[]{1, 2, 7, 4, 11}));
         System.out.println(10 == maxProfit.maxProfitWithFreezing(new int[]{8,6,4,3,3,2,3,5,8,3,8,2,6}));
