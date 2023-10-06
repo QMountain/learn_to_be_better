@@ -1,12 +1,30 @@
 package algorithm.leetcode.medium.s;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Stack;
 
 public class StockSpanner {
 
-    LinkedList<Integer> elementList;
+    Stack<int[]> stack;
+
+    public StockSpanner() {
+        stack = new Stack<>();
+    }
+
+    public int next(int price) {
+        int ans = 1;
+        while (!stack.isEmpty()) {
+            int[] peek = stack.peek();
+            if (peek[0] > price) {
+                break;
+            }
+            ans += peek[1];
+            stack.pop();
+        }
+        stack.push(new int[]{price, ans});
+        return ans;
+    }
+
+    /*LinkedList<Integer> elementList;
     LinkedList<Integer> countList;
 
     // 题号 901 股票价格跨度 官解 单调栈 时间O(n) 空间O(n)
@@ -53,7 +71,7 @@ public class StockSpanner {
         elementList.add(price);
         countList.add(count);
         return count;
-    }
+    }*/
 
     public static void main(String[] args) {
         StockSpanner stockSpanner = new StockSpanner();
