@@ -2,6 +2,19 @@ package algorithm.leetcode.medium.m;
 
 public class MaxProfit {
 
+    // 题号：714 买卖股票的最佳时机含手续费
+    public int maxProfit(int[] prices, int fee) {
+        int buy = -prices[0];
+        int sell = 0;
+        for (int i = 1; i < prices.length; i++) {
+            buy = Math.max(buy, sell - prices[i]);
+            if (prices[i] + buy > fee) {
+                sell = Math.max(sell, prices[i] + buy - fee);
+            }
+        }
+        return sell;
+    }
+
     // 题号：309 买卖股票的最佳时机含冷冻期
     // 1 <= prices.length <= 5000
     public int maxProfit(int[] prices) {
@@ -53,6 +66,11 @@ public class MaxProfit {
 
     public static void main(String[] args) {
         MaxProfit maxProfit = new MaxProfit();
+        // ********** 题号：714 买卖股票的最佳时机含手续费。case start *********
+        System.out.println(maxProfit.maxProfit(new int[]{1, 3, 2, 8, 4, 9}, 2));
+        // ********** 题号：714 买卖股票的最佳时机含手续费。case end *********
+
+
         // ********** 题号：309 买卖股票的最佳时机含冷冻期。case start *********
         System.out.println(maxProfit.maxProfit(new int[]{7,1,5,3,6,4}));
         System.out.println(0 == maxProfit.maxProfit(new int[]{1}));
