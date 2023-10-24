@@ -6,6 +6,24 @@ import java.util.Map;
 
 public class SingleNumber {
 
+    // 题号 137. 只出现一次的数字II
+    // 1 <= nums.length <= 3 * 10^4 
+    // -2^31 <= nums[i] <= 2^31 - 1
+    // nums 中，除某个元素仅出现 一次 外，其余每个元素都恰出现 三次
+    public int singleNumber(int[] nums) {
+        int ans = 0;
+        for (int i = 0; i < 32; ++i) {
+            int total = 0;
+            for (int num: nums) {
+                total += ((num >> i) & 1);
+            }
+            if (total % 3 != 0) {
+                ans |= (1 << i);
+            }
+        }
+        return ans;
+    }
+
     // 题号 260 只出现一次的数字 III
     public int[] singleNumber3(int[] nums) {
         int xor = 0;
@@ -26,7 +44,7 @@ public class SingleNumber {
     }
 
     // 时间O(logN) 没用额外空间
-    public int singleNumber(int[] nums) {
+    public int singleNumber4(int[] nums) {
         int length = nums.length;
         if (length == 1) {
             return nums[0];
