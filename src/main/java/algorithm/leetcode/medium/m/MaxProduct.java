@@ -7,6 +7,51 @@ import java.util.Set;
 
 public class MaxProduct {
 
+    // 2 <= words.length <= 1000
+    public int maxProduct(String[] words) {
+        Arrays.sort(words, Comparator.comparingInt(String::length));
+        int length = words.length;
+        int[][] arr = new int[length][26];
+        for (int i = 0; i < length; i++) {
+            arr[i] = convert(words[i]);
+        }
+        int ans = 0;
+        for (int i = length-1; i > 0; i--) {
+            int[] n1 = arr[i];
+            if (words[i].length() * words[i-1].length() <= ans) {
+                break;
+            }
+            for (int j = i-1; j >= 0; j--) {
+                int multi = words[i].length() * words[j].length();
+                if (multi > ans) {
+                    int[] n2 = arr[j];
+                    boolean hasCommon = false;
+                    for (int k = 0; k < 26; k++) {
+                        if (n1[k] == 1 && n2[k] == 1) {
+                            hasCommon = true;
+                            break;
+                        }
+                    }
+                    if (!hasCommon) {
+                        ans = multi;
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public int[] convert(String word) {
+        int[] array = new int[26];
+        for (char c : word.toCharArray()) {
+            array[c - 'a'] = 1;
+        }
+        return array;
+    }
+
     // 题号 318 最大单词长度乘积 尝试方法2, 实际提交结果没提升，题解提供的思路是位运算
     // 把出现的字符表示为01串，然后 & 运算，为0即没有相同字符
     public int maxProduct2(String[] words) {
@@ -30,7 +75,7 @@ public class MaxProduct {
     }
 
     // 题号 318 最大单词长度乘积
-    public int maxProduct(String[] words) {
+    public int maxProduct3(String[] words) {
         int max = 0;
         int length = words.length;
         for (int i = 0; i < length; i++) {
@@ -121,6 +166,10 @@ public class MaxProduct {
 
     public static void main(String[] args) {
         MaxProduct maxProduct = new MaxProduct();
+        System.out.println(16 == maxProduct.maxProduct(new String[]{"abcw","baz","foo","bar","xtfn","abcdef"}));
+        System.out.println(4 == maxProduct.maxProduct(new String[]{"a","ab","abc","d","cd","bcd","abcd"}));
+        System.out.println(maxProduct.maxProduct(new String[]{"a","aa","aaa","aaaa"}));
+
         System.out.println(maxProduct.maxProduct2(new String[]{"eae","ea","aaf","bda","fcf","dc","ac","ce","cefde","dabae"}));
         System.out.println(maxProduct.maxProduct(new int[]{-2,0}));
         System.out.println(maxProduct.maxProduct(new int[]{-3,-1,-1}));
