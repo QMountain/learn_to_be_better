@@ -8,6 +8,23 @@ public class DistinctDifferenceArray {
 
     public int[] distinctDifferenceArray(int[] nums) {
         int length = nums.length;
+        int[] suffix = new int[length];
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = length-1; i >= 0; i--) {
+            suffix[i] = set.size();
+            set.add(nums[i]);
+        }
+        int[] ans = new int[length];
+        set.clear();
+        for (int i = 0; i < length; i++) {
+            set.add(nums[i]);
+            ans[i] = set.size() - suffix[i];
+        }
+        return ans;
+    }
+
+    public int[] distinctDifferenceArray2(int[] nums) {
+        int length = nums.length;
         HashMap<Integer, Integer> map = new HashMap<>();
         for (int num : nums) {
             map.put(num, map.getOrDefault(num, 0) + 1);
