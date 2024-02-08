@@ -19,7 +19,7 @@ public class IsCousins {
         TreeNode py = null;
         List<TreeNode> nodes = Collections.singletonList(root);
         int k = 1;
-        while (nodes.size() > 0) {
+        while (!nodes.isEmpty()) {
             List<TreeNode> nn = new ArrayList<>();
             for (TreeNode node : nodes) {
                 if (node.left != null) {
@@ -51,7 +51,7 @@ public class IsCousins {
             k++;
             nodes = nn;
         }
-        return kx == ky &&!Objects.equals(px, py);
+        return kx == ky && !Objects.equals(px, py);
     }
 
     public static void main(String[] args) {
