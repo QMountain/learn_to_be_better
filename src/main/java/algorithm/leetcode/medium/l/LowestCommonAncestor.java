@@ -6,7 +6,49 @@ import java.util.*;
 
 public class LowestCommonAncestor {
 
+    // 树中节点数目在范围 [2, 10^5] 内。
+    // -10^9 <= Node.val <= 10^9
+    // 所有 Node.val 互不相同 。
+    // p != q
+    // p 和 q 均存在于给定的二叉树中。
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        LinkedList<TreeNode> pList = new LinkedList<>();
+        LinkedList<TreeNode> qList = new LinkedList<>();
+        searchList(root, p, q, pList, qList);
+        TreeNode ancestor = root;
+        while (pList.peekFirst() == qList.peekFirst()) {
+            ancestor = pList.pollFirst();
+            qList.pollFirst();
+        }
+        return ancestor;
+    }
+
+    private void searchList(TreeNode root, TreeNode p, TreeNode q,
+                            LinkedList<TreeNode> pList, LinkedList<TreeNode> qList) {
+        if (pList.peekLast() == p && qList.peekLast() == q) {
+            return;
+        }
+        if (pList.peekLast() != p) {
+            pList.addLast(root);
+        }
+        if (qList.peekLast() != q) {
+            qList.addLast(root);
+        }
+        if (root.left != null) {
+            searchList(root.left, p, q, pList, qList);
+        }
+        if (root.right != null) {
+            searchList(root.right, p, q, pList, qList);
+        }
+        if (pList.peekLast() != p) {
+            pList.pollLast();
+        }
+        if (qList.peekLast() != q) {
+            qList.pollLast();
+        }
+    }
+
+    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
         Map<TreeNode,TreeNode> nodeParentMap = new HashMap<>();
         addToMap(root,p,q,nodeParentMap);
         List<TreeNode> pPath = new ArrayList<>();
@@ -52,6 +94,13 @@ public class LowestCommonAncestor {
 
     public static void main(String[] args) {
         LowestCommonAncestor lowestCommonAncestor = new LowestCommonAncestor();
+        TreeNode node2 = new TreeNode(2, new TreeNode(7), new TreeNode(4));
+        TreeNode node6 = new TreeNode(6);
+        TreeNode node0 = new TreeNode(0);
+        TreeNode node3 = lowestCommonAncestor.lowestCommonAncestor(new TreeNode(3,
+                        new TreeNode(5, node6, node2),
+                        new TreeNode(1, node0, new TreeNode(8))),
+                node6, node0);
         /*TreeNode node5 = new TreeNode(5, new TreeNode(6),
                 new TreeNode(2,new TreeNode(7),new TreeNode(4)));
         TreeNode node1 = new TreeNode(1, new TreeNode(0), new TreeNode(8));
