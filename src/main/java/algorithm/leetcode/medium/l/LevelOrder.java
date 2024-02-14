@@ -35,7 +35,37 @@ public class LevelOrder {
         return ansList;
     }
 
+    // 题号 102 二叉树的层序遍历
+    // 树中节点数目在范围 [0, 2000] 内
+    // -1000 <= Node.val <= 1000
     public List<List<Integer>> levelOrder(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        List<List<Integer>> ansList = new ArrayList<>();
+        List<TreeNode> nodeList = Collections.singletonList(root);
+        List<Integer> valList = Collections.singletonList(root.val);
+        while (!nodeList.isEmpty()) {
+            ansList.add(valList);
+            List<TreeNode> nextNodeList = new ArrayList<>();
+            List<Integer> nextValList = new ArrayList<>();
+            for (TreeNode node : nodeList) {
+                if (node.left != null) {
+                    nextNodeList.add(node.left);
+                    nextValList.add(node.left.val);
+                }
+                if (node.right != null) {
+                    nextNodeList.add(node.right);
+                    nextValList.add(node.right.val);
+                }
+            }
+            nodeList = nextNodeList;
+            valList = nextValList;
+        }
+        return ansList;
+    }
+
+    public List<List<Integer>> levelOrder2(TreeNode root) {
         List<List<Integer>> resList = new ArrayList<>();
         if (root == null) {
             return resList;
