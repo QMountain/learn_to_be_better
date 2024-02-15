@@ -4,17 +4,18 @@ import algorithm.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class LevelOrderBottom {
 
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
-        List<List<Integer>> ansList = new ArrayList<>();
+        List<List<Integer>> ansList = new LinkedList<>();
         if (root == null) {
             return ansList;
         }
         List<TreeNode> nodes = Collections.singletonList(root);
-        while (nodes.size() > 0) {
+        while (!nodes.isEmpty()) {
             List<TreeNode> list = new ArrayList<>();
             List<Integer> values = new ArrayList<>();
             for (TreeNode node : nodes) {
@@ -27,14 +28,9 @@ public class LevelOrderBottom {
                 }
             }
             nodes = list;
-            ansList.add(values);
+            ansList.add(0, values);
         }
-        int size = ansList.size();
-        List<List<Integer>> resList = new ArrayList<>();
-        for (int i = size-1; i >= 0; i--) {
-            resList.add(ansList.get(i));
-        }
-        return resList;
+        return ansList;
     }
 
 }
