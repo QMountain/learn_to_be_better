@@ -15,7 +15,7 @@ public class ZigzagLevelOrder {
         }
         List<TreeNode> nodes = Collections.singletonList(root);
         boolean toward = true;
-        while (nodes.size() > 0) {
+        while (!nodes.isEmpty()) {
             List<TreeNode> list = new ArrayList<>();
             List<Integer> values = new ArrayList<>();
             if (toward) {
