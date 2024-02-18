@@ -80,6 +80,10 @@ public class SingleNumber {
 
     public static void main(String[] args) {
         SingleNumber singleNumber = new SingleNumber();
+        System.out.println(Integer.toBinaryString(5));
+        System.out.println(Integer.toBinaryString(-5));
+        System.out.println(singleNumber.singleNumber(new int[]{2,2,3,2}));
+
         System.out.println(Arrays.toString(singleNumber.singleNumber3(new int[]{1,2,1,3,2,5})));
         System.out.println(Arrays.toString(singleNumber.singleNumber3(new int[]{-1,0})));
     }
