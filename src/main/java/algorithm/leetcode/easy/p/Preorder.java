@@ -4,23 +4,45 @@ import algorithm.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Preorder {
 
+    // 节点总数在范围 [0, 10^4]内
+    // 迭代
     public List<Integer> preorder(Node root) {
+        List<Integer> ansList = new ArrayList<>();
+        if (root == null) {
+            return ansList;
+        }
+        LinkedList<Node> nodeList = new LinkedList<>();
+        nodeList.add(root);
+        while (!nodeList.isEmpty()) {
+            Node node = nodeList.pollFirst();
+            ansList.add(node.val);
+            List<Node> children = node.children;
+            if (children != null && !children.isEmpty()) {
+                nodeList.addAll(0, children);
+            }
+        }
+        return ansList;
+    }
+
+    // 节点总数在范围 [0, 10^4]内
+    // 递归
+    public List<Integer> preorder2(Node root) {
         List<Integer> resList = new ArrayList<>();
         if (root == null) {
             return resList;
         }
         resList.add(root.val);
         List<Node> children = root.children;
-        if (children != null && children.size() > 0) {
+        if (children != null && !children.isEmpty()) {
             for (Node child : children) {
                 resList.addAll(preorder(child));
             }
         }
-
         return resList;
     }
 
