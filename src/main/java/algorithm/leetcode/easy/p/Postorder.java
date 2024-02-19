@@ -14,7 +14,7 @@ public class Postorder {
             return resList;
         }
         List<Node> children = root.children;
-        if (children == null || children.size() == 0) {
+        if (children == null || children.isEmpty()) {
             resList.add(root.val);
             return resList;
         }
