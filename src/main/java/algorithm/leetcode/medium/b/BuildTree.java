@@ -7,8 +7,37 @@ import java.util.Set;
 
 public class BuildTree {
 
+    // 题号 105 从前序与中序遍历序列构造二叉树
+    // 1 <= preorder.length <= 3000
+    // inorder.length == preorder.length
+    // preorder 和 inorder 均 无重复 元素
+    // 前序：根左右
+    // 中序：左根右
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return buildTree(preorder, inorder, 0, preorder.length-1, 0, inorder.length-1);
+    }
+
+    public TreeNode buildTree(int[] preorder, int[] inorder,
+                              int preStart, int preEnd, int inStart, int inEnd) {
+        if (preEnd == preStart) {
+            return new TreeNode(preorder[preStart]);
+        }
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == preorder[preStart]) {
+                TreeNode left = buildTree(preorder, inorder,
+                        preStart + 1, preStart + i - inStart,
+                        inStart, i - 1);
+                TreeNode right = buildTree(preorder, inorder,
+                        preStart + i - inStart + 1, preEnd,
+                        i + 1, inEnd);
+                return new TreeNode(preorder[preStart], left, right);
+            }
+        }
+        return null;
+    }
+
     // 题号106，medium 从中序与后序遍历序列构造二叉树
-    public TreeNode buildTree(int[] inorder, int[] postorder) {
+    public TreeNode buildTree3(int[] inorder, int[] postorder) {
         int pl = postorder.length;
         int rootVal = postorder[pl-1];
         TreeNode root = new TreeNode(rootVal);
@@ -113,6 +142,7 @@ public class BuildTree {
 
     public static void main(String[] args) {
         BuildTree buildTree = new BuildTree();
+        TreeNode node = buildTree.buildTree(new int[]{3,9,20,15,7}, new int[]{9,3,15,20,7});
         TreeNode treeNode = buildTree.buildTree(new int[]{9,3,15,20,7}, new int[]{9,15,7,20,3});
         System.out.println(treeNode);
 
