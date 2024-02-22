@@ -13,7 +13,7 @@ public class BuildTree {
     // preorder 和 inorder 均 无重复 元素
     // 前序：根左右
     // 中序：左根右
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
+    /*public TreeNode buildTree(int[] preorder, int[] inorder) {
         return buildTree(preorder, inorder, 0, preorder.length-1, 0, inorder.length-1);
     }
 
@@ -31,6 +31,32 @@ public class BuildTree {
                         preStart + i - inStart + 1, preEnd,
                         i + 1, inEnd);
                 return new TreeNode(preorder[preStart], left, right);
+            }
+        }
+        return null;
+    }*/
+
+    // 题号106 medium 从中序与后序遍历序列构造二叉树
+    // 中序：左根右
+    // 后序：左右根
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTree(inorder, postorder,
+                0, inorder.length-1, 0, postorder.length-1);
+    }
+
+    public TreeNode buildTree(int[] inorder, int[] postorder,
+                              int inStart, int inEnd,
+                              int postStart, int postEnd) {
+        if (postStart == postEnd) {
+            return new TreeNode(postorder[postStart]);
+        }
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inorder[i] == postorder[postEnd]) {
+                TreeNode left = buildTree(inorder, postorder,
+                        inStart, i - 1, postStart, postStart + i - inStart - 1);
+                TreeNode right = buildTree(inorder, postorder,
+                        i + 1, inEnd, postStart + i - inStart, postEnd - 1);
+                return new TreeNode(inorder[i], left, right);
             }
         }
         return null;
@@ -142,12 +168,14 @@ public class BuildTree {
 
     public static void main(String[] args) {
         BuildTree buildTree = new BuildTree();
-        TreeNode node = buildTree.buildTree(new int[]{3,9,20,15,7}, new int[]{9,3,15,20,7});
+
         TreeNode treeNode = buildTree.buildTree(new int[]{9,3,15,20,7}, new int[]{9,15,7,20,3});
         System.out.println(treeNode);
 
 
-        /*TreeNode node4 = buildTree.buildTree(new int[]{1,2,3}, new int[]{1,2,3});
+        /*
+        TreeNode node = buildTree.buildTree(new int[]{3,9,20,15,7}, new int[]{9,3,15,20,7});
+        TreeNode node4 = buildTree.buildTree(new int[]{1,2,3}, new int[]{1,2,3});
         TreeNode node3 = buildTree.buildTree(new int[]{1,2,3}, new int[]{3,2,1});
         TreeNode node2 = buildTree.buildTree(new int[]{1,2}, new int[]{1,2});
         TreeNode node1 = buildTree.buildTree(new int[]{1,2}, new int[]{2,1});
