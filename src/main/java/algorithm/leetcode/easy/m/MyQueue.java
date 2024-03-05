@@ -1,32 +1,41 @@
 package algorithm.leetcode.easy.m;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 public class MyQueue {
 
-    private final List<Integer> list;
+    private final Stack<Integer> inStack;
+    private final Stack<Integer> outStack;
 
     public MyQueue() {
-        list = new ArrayList<>();
+        inStack = new Stack<>();
+        outStack = new Stack<>();
     }
 
     public void push(int x) {
-        list.add(x);
+        inStack.push(x);
     }
 
     public int pop() {
-        Integer integer = list.get(0);
-        list.remove(0);
-        return integer;
+        if (outStack.empty()) {
+            while (!inStack.empty()) {
+                outStack.push(inStack.pop());
+            }
+        }
+        return outStack.pop();
     }
 
     public int peek() {
-        return list.get(0);
+        if (outStack.empty()) {
+            while (!inStack.empty()) {
+                outStack.push(inStack.pop());
+            }
+        }
+        return outStack.peek();
     }
 
     public boolean empty() {
-        return list.size() == 0;
+        return inStack.empty() && outStack.empty();
     }
 
 }
