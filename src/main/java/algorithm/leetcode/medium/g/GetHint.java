@@ -2,29 +2,32 @@ package algorithm.leetcode.medium.g;
 
 public class GetHint {
 
+    // 1 <= secret.length, guess.length <= 1000
     public String getHint(String secret, String guess) {
         int length = secret.length();
-        int countA = 0;
-        int countB = 0;
+        int countBulls = 0;
+        int countWrong = 0;
         int[] countArr = new int[10];
         for (int i = 0; i < length; i++) {
             if (secret.charAt(i) == guess.charAt(i)) {
-                countA++;
+                countBulls++;
             } else {
-                int key = Integer.parseInt(secret.charAt(i) + "");
-                countArr[key]++;
-            }
-        }
-        for (int i = 0; i < length; i++) {
-            if (secret.charAt(i) != guess.charAt(i)) {
-                int key = Integer.parseInt(guess.charAt(i) + "");
-                if (countArr[key] > 0) {
-                    countArr[key]--;
-                    countB++;
+                int key = secret.charAt(i) - '0';
+                if (++countArr[key] > 0) {
+                    countWrong++;
+                }
+                int key2 = guess.charAt(i) - '0';
+                if (--countArr[key2] >= 0) {
+                    countWrong--;
                 }
             }
         }
-        return countA+"A"+countB+"B";
+        return countBulls+"A"+(length-countBulls-countWrong)+"B";
     }
 
+    public static void main(String[] args) {
+        GetHint getHint = new GetHint();
+        System.out.println(getHint.getHint("1123", "0111"));
+        System.out.println(getHint.getHint("1807", "7810"));
+    }
 }
