@@ -2,17 +2,21 @@ package algorithm.leetcode.easy.n;
 
 public class NumArray {
 
-    private final int[] nums;
+    private final int[] prefixSum;
 
     public NumArray(int[] nums) {
-        this.nums = nums;
+        int length = nums.length;
+        prefixSum = new int[length];
+        prefixSum[0] = nums[0];
+        for (int i = 1; i < length; i++) {
+            prefixSum[i] = prefixSum[i-1] + nums[i];
+        }
     }
 
     public int sumRange(int left, int right) {
-        int res = 0;
-        for (int i = left; i <= right; i++) {
-            res += nums[i];
+        if (left == 0) {
+            return prefixSum[right];
         }
-        return res;
+        return prefixSum[right] - prefixSum[left-1];
     }
 }
