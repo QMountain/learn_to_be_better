@@ -5,7 +5,22 @@ import java.util.Map;
 
 public class CanConstruct {
 
+    // ransomNote 和 magazine 由小写英文字母组成
     public boolean canConstruct(String ransomNote, String magazine) {
+        int[] count = new int[26];
+        for (int i = 0; i < magazine.length(); i++) {
+            count[magazine.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < ransomNote.length(); i++) {
+            int index = ransomNote.charAt(i) - 'a';
+            if (count[index]-- == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean canConstruct2(String ransomNote, String magazine) {
         int rl = ransomNote.length();
         Map<Character,Integer> map1 = new HashMap<>(rl);
         for (int i = 0; i < rl; i++) {
