@@ -4,79 +4,60 @@ import java.util.*;
 
 public class FullBloomFlowers {
 
-    TreeMap<Integer, int[]> map;
-
     // 1 <= flowers.length <= 5 * 10^4
     // 1 <= people.length <= 5 * 10^4
     public int[] fullBloomFlowers(int[][] flowers, int[] people) {
-        int min = people[0];
-        int max = people[0];
+        TreeMap<Integer, LinkedList<Integer>> map = new TreeMap<>();
         for (int person : people) {
-            min = Math.min(min, person);
-            max = Math.max(max, person);
+            if (!map.containsKey(person)) {
+                map.put(person, new LinkedList<>());
+            }
         }
-        map = new TreeMap<>();
         for (int[] flower : flowers) {
-            flower[0] = Math.max(min, flower[0]);
-            flower[1] = Math.min(max, flower[1]);
-            addToMap(flower);
+            if (flower[0] > map.lastKey() || flower[1] < map.firstKey()) {
+                continue;
+            }
+            if (!map.containsKey(flower[0])) {
+                flower[0] = map.higherKey(flower[0]);
+                if (flower[0] > flower[1]) {
+                    continue;
+                }
+            }
+            if (!map.containsKey(flower[1])) {
+                flower[1] = map.lowerKey(flower[1]);
+                if (flower[0] > flower[1]) {
+                    continue;
+                }
+            }
+            if (flower[0] <= flower[1]) {
+                map.get(flower[0]).addLast(flower[1]);
+            }
+        }
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        HashMap<Integer, Integer> countMap = new HashMap<>();
+        while (!map.isEmpty()) {
+            Map.Entry<Integer, LinkedList<Integer>> entry = map.pollFirstEntry();
+            Integer time = entry.getKey();
+            LinkedList<Integer> list = entry.getValue();
+            while (!queue.isEmpty() && queue.peek() < time) {
+                queue.poll();
+            }
+            countMap.put(time, list.size() + queue.size());
+            queue.addAll(list);
         }
         int length = people.length;
         int[] ans = new int[length];
         for (int i = 0; i < length; i++) {
-            if (map.containsKey(people[i])) {
-                ans[i] = map.get(people[i])[1];
-            } else {
-                Map.Entry<Integer, int[]> lowerEntry = map.lowerEntry(people[i]);
-                if (lowerEntry != null) {
-                    int[] value = lowerEntry.getValue();
-                    if (value[0] >= people[i]) {
-                        ans[i] = value[1];
-                    }
-                }
-            }
+            ans[i] = countMap.get(people[i]);
         }
         return ans;
     }
 
-    public void addToMap(int[] flower) {
-        if (map.containsKey(flower[0])) {
-            int[] arr = map.get(flower[0]);
-            if (arr[0] == flower[1]) {
-                arr[1]++;
-            } else if (arr[0] < flower[1]) {
-                arr[1]++;
-                addToMap(new int[]{arr[0] + 1, flower[1]});
-            } else {
-                map.put(flower[1]+1, new int[]{arr[0], arr[1]});
-                arr[0] = flower[1];
-                arr[1]++;
-            }
-            return;
-        }
-        Map.Entry<Integer, int[]> lowerEntry = map.lowerEntry(flower[0]);
-        if (lowerEntry != null) {
-            int[] lowerValue = lowerEntry.getValue();
-            if (lowerValue[0] >= flower[0]) {
-                map.put(flower[0], new int[]{lowerValue[0], lowerValue[1]});
-                lowerValue[0] = flower[0] - 1;
-                addToMap(flower);
-                return;
-            }
-        }
-        Map.Entry<Integer, int[]> higherEntry = map.higherEntry(flower[0]);
-        if (higherEntry != null) {
-            if (higherEntry.getKey() <= flower[1]) {
-                map.put(flower[0], new int[]{higherEntry.getKey() - 1, 1});
-                addToMap(new int[]{higherEntry.getKey(), flower[1]});
-                return;
-            }
-        }
-        map.put(flower[0], new int[]{flower[1], 1});
-    }
-
     public static void main(String[] args) {
         FullBloomFlowers fullBloomFlowers = new FullBloomFlowers();
+        System.out.println(Arrays.toString(fullBloomFlowers.fullBloomFlowers(
+                new int[][]{{11,11},{24,46},{3,25},{44,46}},
+                new int[]{1,8,26,7,43,26,1})).equals("[0, 1, 1, 1, 1, 1, 0]"));
         System.out.println(Arrays.toString(fullBloomFlowers.fullBloomFlowers(
                 new int[][]{{28,37},{23,33},{39,39},{49,50},{41,45},{14,47}},
                 new int[]{19,44,28,41,40,12,48,17,34,30})));
@@ -98,9 +79,7 @@ public class FullBloomFlowers {
                         13,18,31,28,46,50,47,12,26,16,45,21,2,32,30,43,12,49,49,
                         19,14,22,31,31,35,20})));
 
-        System.out.println(Arrays.toString(fullBloomFlowers.fullBloomFlowers(
-                new int[][]{{11,11},{24,46},{3,25},{44,46}},
-                new int[]{1,8,26,7,43,26,1})).equals("[0, 1, 1, 1, 1, 1, 0]"));
+
 
         System.out.println(Arrays.toString(fullBloomFlowers.fullBloomFlowers(
                 new int[][]{{1, 10}, {3, 3}}, new int[]{3, 3, 2})).equals("[2, 2, 1]"));
