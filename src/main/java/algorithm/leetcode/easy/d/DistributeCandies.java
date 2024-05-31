@@ -1,10 +1,29 @@
 package algorithm.leetcode.easy.d;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class DistributeCandies {
+
+    // 题号 2928 给小朋友们分糖果 I
+    // 1 <= n <= 50
+    // 1 <= limit <= 50
+    public int distributeCandies(int n, int limit) {
+        if (n > limit * 3) {
+            return 0;
+        }
+        int ans = 0;
+        for (int i = 0; i <= limit; i++) {
+            for (int j = 0; j <= limit; j++) {
+                if (i + j > n) {
+                    break;
+                }
+                if (n - i - j <= limit) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
 
     public int distributeCandies(int[] candyType) {
         int length = candyType.length;
@@ -16,7 +35,7 @@ public class DistributeCandies {
     }
 
     // 分糖果 II
-    public int[] distributeCandies(int candies, int num_people) {
+    public int[] distributeCandies2(int candies, int num_people) {
         double v = (Math.sqrt(candies * 2 + 0.25) - 0.5) / num_people;
         int rows = (int)v;
         int cost = (rows*num_people*rows*num_people+rows*num_people)/2;
@@ -46,8 +65,10 @@ public class DistributeCandies {
 
     public static void main(String[] args) {
         DistributeCandies distributeCandies = new DistributeCandies();
+        System.out.println(distributeCandies.distributeCandies(3, 3));
         System.out.println(Arrays.toString(
-                distributeCandies.distributeCandies(10, 3)));
-        System.out.println(Arrays.toString(distributeCandies.distributeCandies(7, 4)));
+                distributeCandies.distributeCandies2(10, 3)));
+        System.out.println(Arrays.toString(distributeCandies
+                .distributeCandies2(7, 4)));
     }
 }
