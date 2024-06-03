@@ -34,7 +34,7 @@ public class DistributeCandies {
         return set.size();
     }
 
-    // 分糖果 II
+    // 题号 1103 分糖果 II
     public int[] distributeCandies2(int candies, int num_people) {
         double v = (Math.sqrt(candies * 2 + 0.25) - 0.5) / num_people;
         int rows = (int)v;
