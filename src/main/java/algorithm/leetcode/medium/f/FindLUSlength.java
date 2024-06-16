@@ -5,6 +5,37 @@ import java.util.*;
 public class FindLUSlength {
 
     public int findLUSlength(String[] strs) {
+        TreeMap<Integer, Map<String, Integer>> map = new TreeMap<>();
+        for (String str : strs) {
+            int key = str.length();
+            Map<String, Integer> innerMap = map.getOrDefault(key, new HashMap<>());
+            innerMap.put(str, innerMap.getOrDefault(str, 0) + 1);
+            map.put(key, innerMap);
+        }
+        Set<String> longerStrSet = new HashSet<>();
+        while (!map.isEmpty()) {
+            Map.Entry<Integer, Map<String, Integer>> lastEntry = map.pollLastEntry();
+            Map<String, Integer> innerMap = lastEntry.getValue();
+            for (Map.Entry<String, Integer> entry : innerMap.entrySet()) {
+                if (entry.getValue() == 1) {
+                    boolean isSub = false;
+                    for (String s : longerStrSet) {
+                        if (isSub(s, entry.getKey())) {
+                            isSub = true;
+                            break;
+                        }
+                    }
+                    if (!isSub) {
+                        return lastEntry.getKey();
+                    }
+                }
+                longerStrSet.add(entry.getKey());
+            }
+        }
+        return -1;
+    }
+
+    public int findLUSlength2(String[] strs) {
         TreeMap<Integer, Set<String>> map = new TreeMap<>();
         Set<String> abortSet = new HashSet<>();
         for (String str : strs) {
