@@ -4,6 +4,39 @@ import java.util.PriorityQueue;
 
 public class MaximumLength {
 
+    // 题号 3201 找出有效子序列的最大长度 I
+    // 2 <= nums.length <= 2 * 10^5
+    // 1 <= nums[i] <= 10^7
+    public int maximumLength(int[] nums) {
+        int ans = 1;
+        boolean isOdd = nums[0] % 2 == 1;
+        // 连续奇数
+        int m1 = isOdd ? 1 : 0;
+        // 连续偶数
+        int m2 = isOdd ? 0 : 1;
+        // 奇偶交错
+        int m3 = 1;
+        for (int i = 1; i < nums.length; i++) {
+            boolean currOdd = nums[i] % 2 == 1;
+            if (!currOdd) {
+                if (isOdd) {
+                    m3++;
+                }
+                m2++;
+            } else {
+                if (!isOdd) {
+                    m3++;
+                }
+                m1++;
+            }
+            isOdd = currOdd;
+        }
+        ans = Math.max(ans, m1);
+        ans = Math.max(ans, m2);
+        ans = Math.max(ans, m3);
+        return ans;
+    }
+
     // 题号 2981 找出出现至少三次的最长特殊子字符串 I
     // 3 <= s.length <= 50
     public int maximumLength2(String s) {
@@ -118,6 +151,12 @@ public class MaximumLength {
 
     public static void main(String[] args) {
         MaximumLength maximumLength = new MaximumLength();
+        System.out.println(6 == maximumLength.maximumLength(
+                new int[]{1,2,1,1,2,1,2}));
+        System.out.println(4 == maximumLength.maximumLength(
+                new int[]{1,2,3,4}));
+
+
         System.out.println(-1 == maximumLength.maximumLength("jicja"));
         System.out.println(1 == maximumLength.maximumLength("abcaba"));
         System.out.println(-1 == maximumLength.maximumLength("abcdef"));
