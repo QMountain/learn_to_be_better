@@ -2,6 +2,7 @@ package algorithm.nowcoder.huawei.easy;
 
 import java.util.Scanner;
 
+// HJ10 字符个数统计
 public class HJ10 {
 
     public static void main(String[] args) {

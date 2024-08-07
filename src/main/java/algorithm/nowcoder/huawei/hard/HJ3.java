@@ -3,6 +3,7 @@ package algorithm.nowcoder.huawei.hard;
 import java.util.Scanner;
 import java.util.TreeSet;
 
+// HJ3 明明的随机数
 public class HJ3 {
 
     public static void main(String[] args) {
