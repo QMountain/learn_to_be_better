@@ -5,6 +5,38 @@ import java.util.*;
 public class FindMinHeightTrees {
 
     public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] edge : edges) {
+            List<Integer> list1 = map.getOrDefault(edge[0], new ArrayList<>());
+            list1.add(edge[1]);
+            map.put(edge[0], list1);
+
+            List<Integer> list2 = map.getOrDefault(edge[1], new ArrayList<>());
+            list2.add(edge[0]);
+            map.put(edge[1], list2);
+        }
+        int testRoot = 0;
+        for (int i = 0; i < n; i++) {
+            if (map.get(i).size() > 1) {
+                testRoot = i;
+                break;
+            }
+        }
+        int minDepth = n;
+        int maxDepth = 0;
+        Set<Integer> usedSet = new HashSet<>();
+        Set<Integer> set = new HashSet<>();
+        set.add(testRoot);
+        while (!set.isEmpty()) {
+            Set<Integer> nextSet = new HashSet<>();
+            for (Integer node : set) {
+                //map.get(node)
+            }
+        }
+        return null;
+    }
+
+    public List<Integer> findMinHeightTrees2(int n, int[][] edges) {
         if (edges.length == 0) {
             return Collections.singletonList(0);
         }

@@ -1,7 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyUtil {
 
+    int divider = 1000_000_007;
+
     public static void main(String[] args) {
-        /*String s = "[[10,60],[20,30],[30,30],[60,40]]";
+        String s = "[[1,1],[-2,-2],[-2,2]]";
         s = s.trim();
         char[] chars = s.toCharArray();
         for (int i = 0; i < chars.length; i++) {
@@ -10,10 +15,12 @@ public class MyUtil {
             }
             if (chars[i] == ']') {
                 chars[i] = '}';
-            }
+            } /*else if (chars[i] == '\"') {
+                chars[i] = '\'';
+            }*/
         }
-        System.out.println(new String(chars));*/
-        MyUtil.StringToChar();
+        System.out.println(new String(chars));
+        //MyUtil.StringToChar();
     }
 
     public static void StringToChar() {
@@ -31,5 +38,18 @@ public class MyUtil {
             }
         }
         System.out.println(new String(chars));
+    }
+
+    public static void arrayToList() {
+        String[][] arr = new String[][]{};
+        List<List<String>> res = new ArrayList<>(arr.length);
+        for (String[] strings : arr) {
+            List<String> list = new ArrayList<>(strings.length);
+            for (String string : strings) {
+                list.add(string);
+            }
+            res.add(list);
+        }
+
     }
 }
