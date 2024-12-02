@@ -1,23 +1,17 @@
-package algorithm.leetcode.hard.s;
+package algorithm.leetcode.hard.t;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
 
-public class SolveNQueens {
+public class TotalNQueens {
 
-    /**
-     * 解决N皇后问题，返回所有可能的解。
-     * @param n 棋盘的大小，1 <= n <= 9。
-     * @return 所有可能的解，每个解都是一个字符串列表，表示每一行的皇后位置。
-     */
-    // 1 <= n <= 9
-    public List<List<String>> solveNQueens(int n) {
-        List<List<String>> ans = new ArrayList<>();
+    public int totalNQueens(int n) {
         if (n == 1) {
-            List<String> list = new ArrayList<>();
-            list.add("Q");
-            ans.add(list);
-            return ans;
+            return 1;
         }
+        List<List<String>> ans = new ArrayList<>();
         char[][] grid = new char[n][n];
         for (char[] chars : grid) {
             Arrays.fill(chars, '.');
@@ -67,7 +61,7 @@ public class SolveNQueens {
                 }
             }
         }
-        return ans;
+        return ans.size();
     }
 
     public boolean setNextRow(int n, char[][] grid, int row, int from, Stack<Integer> colIndexStack) {
@@ -110,12 +104,4 @@ public class SolveNQueens {
         return false;
     }
 
-    public static void main(String[] args) {
-        SolveNQueens solveNQueens = new SolveNQueens();
-        System.out.println(solveNQueens.solveNQueens(5));
-        System.out.println(solveNQueens.solveNQueens(4));
-        System.out.println(solveNQueens.solveNQueens(3));
-        System.out.println(solveNQueens.solveNQueens(2));
-        System.out.println(solveNQueens.solveNQueens(1));
-    }
 }
