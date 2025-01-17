@@ -15,6 +15,16 @@ public class MinOperations {
         return ans;
     }
 
+    public int minOperations(int[] nums, int k) {
+        int count = 0;
+        for (int num : nums) {
+            if (num < k) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
         MinOperations minOperations = new MinOperations();
         System.out.println(minOperations.minOperations(new int[]{1,5,2,4,1}));
