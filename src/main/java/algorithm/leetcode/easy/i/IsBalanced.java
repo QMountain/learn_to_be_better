@@ -49,6 +49,6 @@ public class IsBalanced {
                         new TreeNode(3,
                                 new TreeNode(4), new TreeNode(4)), new TreeNode(3)),
                 new TreeNode(2))));
-        System.out.println(isBalanced.isBalanced(null));
+        System.out.println(isBalanced.isBalanced((TreeNode) null));
     }
 }
