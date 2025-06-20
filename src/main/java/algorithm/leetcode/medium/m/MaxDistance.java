@@ -9,6 +9,74 @@ import java.util.*;
  */
 public class MaxDistance {
 
+    /**
+     * 3443. K 次修改后的最大曼哈顿距离
+     * 给你一个由字符 'N'、'S'、'E' 和 'W' 组成的字符串 s，其中 s[i] 表示在无限网格中的移动操作：
+     * 'N'：向北移动 1 个单位。
+     * 'S'：向南移动 1 个单位。
+     * 'E'：向东移动 1 个单位。
+     * 'W'：向西移动 1 个单位。
+     * 初始时，你位于原点 (0, 0)。你 最多 可以修改 k 个字符为任意四个方向之一。
+     * 请找出在 按顺序 执行所有移动操作过程中的 任意时刻 ，所能达到的离原点的 最大曼哈顿距离 。
+     * 曼哈顿距离 定义为两个坐标点 (xi, yi) 和 (xj, yj) 的横向距离绝对值与纵向距离绝对值之和，
+     * 即 |xi - xj| + |yi - yj|。
+     */
+    public int maxDistance(String s, int k) {
+        int countN = 0;
+        int countS = 0;
+        int countE = 0;
+        int countW = 0;
+        char[] charArray = s.toCharArray();
+        int ans = 0;
+        for (char c : charArray) {
+            if (c == 'N') {
+                countN++;
+            } else if (c == 'S') {
+                countS++;
+            } else if (c == 'E') {
+                countE++;
+            } else {
+                countW++;
+            }
+            // 第一象限 N E
+            int ne = countN + countE;
+            int sw = countS + countW;
+            if (sw <= k) {
+                ans = Math.max(ans, ne + sw);
+            } else {
+                ans = Math.max(ans, ne + k + k - sw);
+            }
+            // 第二象限 N W
+            int nw = countN + countW;
+            int se = countS + countE;
+            if (se <= k) {
+                ans = Math.max(ans, nw + se);
+            } else {
+                ans = Math.max(ans, nw + k + k - se);
+            }
+            // 第三象限 S W
+            if (ne <= k) {
+                ans = Math.max(ans, sw + ne);
+            } else {
+                ans = Math.max(ans, sw + k + k - ne);
+            }
+            // 第四象限 S E
+            if (nw <= k) {
+                ans = Math.max(ans, se + nw);
+            } else {
+                ans = Math.max(ans, se + k + k - nw);
+            }
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        MaxDistance maxDistance = new MaxDistance();
+        System.out.println(5 == maxDistance.maxDistance("EWNWSWN", 1));
+        System.out.println(6 == maxDistance.maxDistance("NSWWEW", 3));
+        System.out.println(3 == maxDistance.maxDistance("NWSE", 1));
+    }
+
     // m == arrays.length
     // 2 <= m <= 10^5
     // 1 <= arrays[i].length <= 500
@@ -102,7 +170,7 @@ public class MaxDistance {
         return count >= m ? right : right - 1;
     }
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         MaxDistance maxDistance = new MaxDistance();
         System.out.println(maxDistance.maxDistance(List.of(List.of(1, 2, 3, 98, 99, 100), List.of(49, 50))));
 
