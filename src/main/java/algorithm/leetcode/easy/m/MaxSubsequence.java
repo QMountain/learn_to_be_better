@@ -9,6 +9,25 @@ public class MaxSubsequence {
 
     public int[] maxSubsequence(int[] nums, int k) {
         PriorityQueue<Integer> queue = new PriorityQueue<>(Comparator.comparingInt(a -> nums[a]));
+        for (int i = 0; i < nums.length; i++) {
+            queue.add(i);
+            if (queue.size() > k) {
+                queue.poll();
+            }
+        }
+        int[] ans = new int[k];
+        for (int i = 0; i < k; i++) {
+            ans[i] = queue.poll();
+        }
+        Arrays.sort(ans);
+        for (int i = 0; i < k; i++) {
+            ans[i] = nums[ans[i]];
+        }
+        return ans;
+    }
+
+    public int[] maxSubsequence2(int[] nums, int k) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>(Comparator.comparingInt(a -> nums[a]));
         LinkedList<Integer> list = new LinkedList<>();
         for (int i = 0; i < k; i++) {
             queue.add(i);
