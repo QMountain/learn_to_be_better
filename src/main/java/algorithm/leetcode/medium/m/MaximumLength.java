@@ -4,10 +4,29 @@ import java.util.PriorityQueue;
 
 public class MaximumLength {
 
+    public int maximumLength(int[] nums) {
+        int oddPre = 0;
+        int evenPre = 0;
+        int odd = 0;
+        int even = 0;
+        for (int num : nums) {
+            if (num % 2 == 0) {
+                evenPre = Math.max(evenPre, oddPre + 1);
+                even++;
+            } else {
+                oddPre = Math.max(oddPre, evenPre + 1);
+                odd++;
+            }
+        }
+        int max = Math.max(odd, even);
+        int maxPre = Math.max(oddPre, evenPre);
+        return Math.max(maxPre, max);
+    }
+
     // 题号 3201 找出有效子序列的最大长度 I
     // 2 <= nums.length <= 2 * 10^5
     // 1 <= nums[i] <= 10^7
-    public int maximumLength(int[] nums) {
+    public int maximumLength2(int[] nums) {
         int ans = 1;
         boolean isOdd = nums[0] % 2 == 1;
         // 连续奇数
@@ -151,6 +170,8 @@ public class MaximumLength {
 
     public static void main(String[] args) {
         MaximumLength maximumLength = new MaximumLength();
+        System.out.println(2 == maximumLength.maximumLength(new int[]{1, 3}));
+
         System.out.println(6 == maximumLength.maximumLength(
                 new int[]{1,2,1,1,2,1,2}));
         System.out.println(4 == maximumLength.maximumLength(
