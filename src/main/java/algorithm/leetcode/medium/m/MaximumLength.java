@@ -4,6 +4,42 @@ import java.util.PriorityQueue;
 
 public class MaximumLength {
 
+    /**
+     * 3202. 找出有效子序列的最大长度 II
+     * 给你一个整数数组 nums 和一个 正 整数 k 。
+     * nums 的一个 子序列 sub 的长度为 x ，如果其满足以下条件，则称其为 有效子序列 ：
+     * (sub[0] + sub[1]) % k == (sub[1] + sub[2]) % k == ... == (sub[x - 2] + sub[x - 1]) % k
+     * 返回 nums 的 最长有效子序列 的长度。
+     * 2 <= nums.length <= 10^3
+     * 1 <= nums[i] <= 10^7
+     * 1 <= k <= 10^3
+     */
+    public int maximumLength(int[] nums, int k) {
+        // row 是 a，col 是 b
+        int[][] grid = new int[k][k];
+        int ans = 0;
+        for (int num : nums) {
+            int index = num % k;
+            for (int j = 0; j < k; j++) {
+                if (grid[index][j] == 0) {
+                    grid[index][j] = -1;
+                } else if (grid[index][j] > 0) {
+                    grid[index][j] = -(grid[index][j] + 1);
+                } else if (index == j) {
+                    grid[index][j] = -(grid[index][j] - 1);
+                }
+                ans = Math.max(ans, Math.abs(grid[index][j]));
+            }
+            for (int i = 0; i < k; i++) {
+                if (index != i && grid[i][index] < 0) {
+                    grid[i][index] = - (grid[i][index] - 1);
+                    ans = Math.max(ans, Math.abs(grid[i][index]));
+                }
+            }
+        }
+        return ans;
+    }
+
     public int maximumLength(int[] nums) {
         int oddPre = 0;
         int evenPre = 0;
@@ -170,6 +206,11 @@ public class MaximumLength {
 
     public static void main(String[] args) {
         MaximumLength maximumLength = new MaximumLength();
+        System.out.println(4 == maximumLength.maximumLength(
+                new int[]{1, 4, 2, 3, 1, 4}, 3));
+        System.out.println(5 == maximumLength.maximumLength(
+                new int[]{1, 2, 3, 4, 5}, 2));
+
         System.out.println(2 == maximumLength.maximumLength(new int[]{1, 3}));
 
         System.out.println(6 == maximumLength.maximumLength(
