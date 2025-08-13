@@ -3,6 +3,13 @@ package algorithm.leetcode.easy.i;
 public class IsPowerOfThree {
 
     public boolean isPowerOfThree(int n) {
+        while (n >= 3 && n % 3 == 0) {
+            n /= 3;
+        }
+        return n == 1;
+    }
+
+    public boolean isPowerOfThree2(int n) {
         if (n == 1) {
             return true;
         }
