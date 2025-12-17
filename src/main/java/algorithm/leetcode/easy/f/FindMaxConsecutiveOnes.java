@@ -2,7 +2,30 @@ package algorithm.leetcode.easy.f;
 
 public class FindMaxConsecutiveOnes {
 
+    /**
+     * 最大连续 1 的个数
+     * 给定一个二进制数组 nums，计算其中最大连续 1 的个数。
+     */
     public int findMaxConsecutiveOnes(int[] nums) {
+        int lastStartIndex = -1;
+        int length = nums.length;
+        int ans = 0;
+        for (int i = 0; i < length; i++) {
+            if (nums[i] == 1) {
+                if (lastStartIndex == -1) {
+                    lastStartIndex = i;
+                    ans = Math.max(ans, 1);
+                } else {
+                    ans = Math.max(ans, i - lastStartIndex + 1);
+                }
+            } else {
+                lastStartIndex = -1;
+            }
+        }
+        return ans;
+    }
+
+    public int findMaxConsecutiveOnes2(int[] nums) {
         int length = nums.length;
         int max = 0;
         for (int i = 0; i < length; i++) {
