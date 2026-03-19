@@ -41,97 +41,42 @@ public class FindMaxForm {
         }
     }
 
-    // 1 <= strs.length <= 600
-    // 1 <= strs[i].length <= 100
+    /**
+     * 474. 一和零
+     * 给你一个二进制字符串数组 strs 和两个整数 m 和 n 。
+     * 请你找出并返回 strs 的最大子集的长度，该子集中 最多 有 m 个 0 和 n 个 1 。
+     * 如果 x 的所有元素也是 y 的元素，集合 x 是集合 y 的 子集 。
+     * 1 <= strs.length <= 600
+     * 1 <= strs[i].length <= 100
+     * strs[i] 仅由 '0' 和 '1' 组成
+     * 1 <= m, n <= 100
+     */
     public int findMaxForm(String[] strs, int m, int n) {
-        int length = strs.length;
-        int[][] arr = new int[length][2];
-        for (int i = 0; i < length; i++) {
-            String str = strs[i];
-            int[] count = new int[2];
+        // 使用动态规划解决背包问题
+        // dp[i][j]表示使用i个0和j个1能组成的最大子集大小
+        int[][] dp = new int[m + 1][n + 1];
+
+        // 遍历每个字符串
+        for (String str : strs) {
+            // 计算当前字符串中的0和1的数量
+            int zeros = 0, ones = 0;
             for (char c : str.toCharArray()) {
                 if (c == '0') {
-                    count[0]++;
+                    zeros++;
                 } else {
-                    count[1]++;
+                    ones++;
                 }
             }
-            arr[i] = count;
-        }
-        Arrays.sort(arr, (a,b)->{
-            if (a[0] == b[0]) {
-                return a[1] - b[1];
-            }
-            if (a[1] == b[1]) {
-                return a[0] - b[0];
-            }
-            return 0;
-        });
-        int startIndex = 0;
-        int sumZero = 0;
-        int sumOne = 0;
-        int ans = 0;
-        for (int i = 0; i < length-1; i++) {
-            sumZero += arr[i][0];
-            sumOne += arr[i][1];
-            if (arr[i][0] < arr[i+1][0] && arr[i][1] <= arr[i+1][1]) {
-                int currLevelLength = i - startIndex + 1;
-                if (sumZero <= m && sumOne <= n) {
-                   ans += currLevelLength;
-                   m -= sumZero;
-                   n -= sumOne;
-                   if (m == 0 && n == 0) {
-                       return ans;
-                   }
-                } else {
-                    // 0 不够， 1 够
-                    if (sumZero > m && sumOne <= n) {
-                        int[] zeroArr = new int[currLevelLength];
-                        for (int j = startIndex; j <= i; j++) {
-                            zeroArr[j-startIndex] = arr[j][0];
-                        }
-                        Arrays.sort(zeroArr);
-                        for (int j = i - startIndex; j >= 0; j--) {
-                            sumZero -= zeroArr[j];
-                            if (sumZero <= m) {
-                                return j + startIndex;
-                            }
-                        }
-                    } else
-                        // 0 够， 1不够
-                        if (sumZero <= m) {
-                        int[] oneArr = new int[currLevelLength];
-                        for (int j = startIndex; j <= i; j++) {
-                            oneArr[j-startIndex] = arr[j][1];
-                        }
-                        Arrays.sort(oneArr);
-                        for (int j = i - startIndex; j >= 0; j--) {
-                            sumOne -= oneArr[j];
-                            if (sumOne <= m) {
-                                return j + startIndex;
-                            }
-                        }
-                    } else {
-                        // 0 和 1 都不够
 
-                    }
+            // 更新dp数组，从后往前遍历避免重复计算
+            for (int i = m; i >= zeros; i--) {
+                for (int j = n; j >= ones; j--) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);
                 }
-                sumZero = 0;
-                sumOne = 0;
-                startIndex = i+1;
             }
         }
-        /*if (countUsedOne <= n) {
-            return list.size();
-        }
-        list.sort(Comparator.comparingInt(a -> a[1]));
-        for (int i = list.size()-1; i >= 0; i--) {
-            countUsedOne -= list.get(i)[1];
-            if (countUsedOne <= n) {
-                return i+1;
-            }
-        }*/
-        return 0;
+
+        return dp[m][n];
     }
 
     public int findMaxForm2(String[] strs, int m, int n) {
@@ -163,7 +108,12 @@ public class FindMaxForm {
 
     public static void main(String[] args) {
         FindMaxForm findMaxForm = new FindMaxForm();
+        System.out.println(3 == findMaxForm.findMaxForm(
+                new String[]{"00011","00001","00001","0011","111"}, 8, 5));
         System.out.println(4 == findMaxForm.findMaxForm(
                 new String[]{"10", "0001", "111001", "1", "0"}, 5, 3));
+
     }
+
+    
 }
