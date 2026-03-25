@@ -79,31 +79,93 @@ public class FindMaxForm {
         return dp[m][n];
     }
 
-    public int findMaxForm2(String[] strs, int m, int n) {
-        HashSet<Element> headElementSet = new HashSet<>();
-        HashSet<String> nextLevelSet = new HashSet<>();
+    /**
+     * 进一步优化：使用排序和剪枝策略
+     * 对字符串按长度排序，优先处理短字符串，可以提前终止
+     */
+    public int findMaxFormWithPruning(String[] strs, int m, int n) {
+        // 按字符串长度排序，优先处理较短的字符串
+        Arrays.sort(strs, Comparator.comparingInt(String::length));
 
-        headElementSet.add(new Element(strs[0]));
-        for (int i = 1; i < strs.length; i++) {
-            Element element = new Element(strs[i]);
-            boolean next = false;
-            HashSet<Element> removeSet = new HashSet<>();
-            for (Element head : headElementSet) {
-                int compare = head.compare(element);
-                if (compare > 0) {
-                    removeSet.add(head);
-                } else if (compare < 0) {
-                    next = true;
+        int[][] dp = new int[m + 1][n + 1];
+
+        // 记录当前最大结果，用于剪枝
+        int maxResult = 0;
+
+        // 遍历每个字符串
+        for (String str : strs) {
+            // 计算当前字符串中的0和1的数量
+            int zeros = 0, ones = 0;
+            for (char c : str.toCharArray()) {
+                if (c == '0') {
+                    zeros++;
+                } else {
+                    ones++;
                 }
             }
-            if (!next) {
-                headElementSet.add(element);
+
+            // 如果当前字符串的0和1数量超过限制，跳过
+            if (zeros > m || ones > n) {
+                continue;
             }
-            if (!removeSet.isEmpty()) {
-                headElementSet.removeAll(removeSet);
+
+            // 更新dp数组，从后往前遍历避免重复计算
+            for (int i = m; i >= zeros; i--) {
+                for (int j = n; j >= ones; j--) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);
+                    maxResult = Math.max(maxResult, dp[i][j]);
+                }
+            }
+
+            // 剪枝：如果已经处理了足够多的字符串，可以提前终止
+            if (maxResult == strs.length) {
+                break;
             }
         }
-        return 0;
+
+        return dp[m][n];
+    }
+
+    /**
+     * 使用缓存优化：避免重复计算0和1的数量
+     */
+    public int findMaxFormWithCache(String[] strs, int m, int n) {
+        // 预计算每个字符串的0和1数量
+        int[][] counts = new int[strs.length][2];
+        for (int i = 0; i < strs.length; i++) {
+            int zeros = 0, ones = 0;
+            for (char c : strs[i].toCharArray()) {
+                if (c == '0') {
+                    zeros++;
+                } else {
+                    ones++;
+                }
+            }
+            counts[i][0] = zeros;
+            counts[i][1] = ones;
+        }
+
+        int[][] dp = new int[m + 1][n + 1];
+
+        // 遍历每个字符串
+        for (int k = 0; k < strs.length; k++) {
+            int zeros = counts[k][0];
+            int ones = counts[k][1];
+
+            // 如果当前字符串的0和1数量超过限制，跳过
+            if (zeros > m || ones > n) {
+                continue;
+            }
+
+            // 更新dp数组，从后往前遍历避免重复计算
+            for (int i = m; i >= zeros; i--) {
+                for (int j = n; j >= ones; j--) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);
+                }
+            }
+        }
+
+        return dp[m][n];
     }
 
     public static void main(String[] args) {
@@ -113,6 +175,16 @@ public class FindMaxForm {
         System.out.println(4 == findMaxForm.findMaxForm(
                 new String[]{"10", "0001", "111001", "1", "0"}, 5, 3));
 
+        // 测试优化版本
+        System.out.println(3 == findMaxForm.findMaxFormWithPruning(
+                new String[]{"00011","00001","00001","0011","111"}, 8, 5));
+        System.out.println(4 == findMaxForm.findMaxFormWithPruning(
+                new String[]{"10", "0001", "111001", "1", "0"}, 5, 3));
+
+        System.out.println(3 == findMaxForm.findMaxFormWithCache(
+                new String[]{"00011","00001","00001","0011","111"}, 8, 5));
+        System.out.println(4 == findMaxForm.findMaxFormWithCache(
+                new String[]{"10", "0001", "111001", "1", "0"}, 5, 3));
     }
 
     
