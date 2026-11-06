@@ -1,8 +1,49 @@
 package algorithm.leetcode.medium.c;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class CountServers {
+
+    /**
+     * 2747. 统计没有收到请求的服务器数目
+     * 给你一个整数 n ，表示服务器的总数目，
+     * 再给你一个下标从 0 开始的 二维 整数数组 logs ，
+     * 其中 logs[i] = [server_id, time] 表示 id 为 server_id 的服务器在 time 时收到了一个请求。
+     * 同时给你一个整数 x 和一个下标从 0 开始的整数数组 queries  。
+     * 请你返回一个长度等于 queries.length 的数组 arr ，
+     * 其中 arr[i] 表示在时间区间 [queries[i] - x, queries[i]] 内没有收到请求的服务器数目。
+     * 注意时间区间是个闭区间。
+     */
+    public int[] countServers(int n, int[][] logs, int x, int[] queries) {
+        Arrays.sort(logs, Comparator.comparingInt(a -> a[1]));
+
+        int m = queries.length;
+        Integer[] ids = new Integer[m];
+        for (int i = 0; i < m; i++) ids[i] = i;
+        Arrays.sort(ids, Comparator.comparingInt(i -> queries[i]));
+
+        int[] ans = new int[m];
+        int[] cnt = new int[n + 1];
+        int left = 0, right = 0, active = 0;
+
+        for (int i : ids) {
+            int q = queries[i];
+            while (right < logs.length && logs[right][1] <= q) {
+                int id = logs[right++][0];
+                if (cnt[id]++ == 0) {
+                    ++active;
+                }
+            }
+            while (left < right && logs[left][1] < q - x) {
+                int id = logs[left++][0];
+                if (--cnt[id] == 0) {
+                    --active;
+                }
+            }
+            ans[i] = n - active;
+        }
+        return ans;
+    }
 
     public int countServers(int[][] grid) {
         HashMap<String, Integer> map = new HashMap<>();
@@ -37,6 +78,13 @@ public class CountServers {
 
     public static void main(String[] args) {
         CountServers countServers = new CountServers();
+        System.out.println(Arrays.toString(countServers.countServers(
+                3, new int[][]{{2,4}, {2,1},{1,2}, {3,1}}, 2,
+                new int[]{3, 4})));
+        System.out.println(Arrays.toString(countServers.countServers(
+                3, new int[][]{{1, 3}, {2, 6}, {1, 5}}, 5,
+                new int[]{10, 11})));
+
         System.out.println(4 == countServers.countServers(new int[][]{{1,1,0,0},{0,0,1,0},{0,0,1,0},{0,0,0,1}}));
         System.out.println(3 == countServers.countServers(new int[][]{{1,0},{1,1}}));
         System.out.println(0 == countServers.countServers(new int[][]{{1,0},{0,1}}));
