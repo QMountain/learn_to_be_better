@@ -1,4 +1,4 @@
-package algorithm.leetcode.easy.l;
+package algorithm.leetcode.easy.i;
 
 public class IsUnique {
 
